@@ -157,8 +157,9 @@ export default {
     ...mapState(["menulist"]),
   },
   mounted() {
-    model.list(this.pn, this.ps).then(value => {
-      this.tableData = value;
+    model.list(this.pn, this.ps).then(res => {
+      // console.log('res.rows: ', res.rows);
+      this.tableData = res.rows;
     });
     model.count().then(value => {
       this.total = value;

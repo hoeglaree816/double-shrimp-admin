@@ -40,8 +40,8 @@ module.exports = class {
     createDate: "创建时间",
     updateBy: "更新者",
     updateDate: "更新时间",
-    pic: "图片",
-    videoUrl: "视频",
+    pic: "封面",
+    contentUrl: "视频",
   };
   constructor(
     id,
@@ -71,37 +71,15 @@ module.exports = class {
 
   static getById(id) {
     return new Promise((resolve) => {
-
-      zp_axios.get("/education/" + id).then((res) => {
-          if(res.data.data){
-            if (res.data.data.createDate)
-              res.data.data.createDate =
-              formatTime(res.data.data.createDate)
-            if (res.data.data.updateDate)
-              res.data.data.updateDate =
-              formatTime(res.data.data.updateDate)
-          }
+      zp_axios.get("/file/" + id).then((res) => {
         resolve([res.data.data]);
       });
     });
   }
-  static list(pn, ps) {
+  static list(page, size) {
     return new Promise((resolve) => {
-      zp_axios.get("/education").then((res) => {
-        let data = res.data.data;
-        data = data.filter((item, index) => index >= (pn - 1) * ps && index < pn * ps);
-
-        data.forEach((item, index) => {
-          if (item.createDate) item.createDate =
-            formatTime(item.createDate)
-          if (item.updateDate) item.updateDate =
-            formatTime(item.updateDate)
-        })
-        let result = [];
-        for (let i = 0; i < ps; i++) {
-          data[i] ? result.push(data[i]) : "";
-        }
-        resolve(result);
+      zp_axios.get(`/education/findAll/${page}/${size}`).then((res) => {
+        resolve(res.data.data);
       });
     });
   }
@@ -137,7 +115,7 @@ module.exports = class {
   static delete(id) {
     return new Promise((resolve) => {
       zp_axios
-        .delete("/education/delete/" + id)
+        .post("/file/delete/" + id)
         .then((res) => {
           let code = res.data.code;
           resolve({
@@ -152,6 +130,15 @@ module.exports = class {
         .get("/education")
         .then((res) => {
           resolve(res.data.data.length);
+        });
+    });
+  }
+  static getEduTypes(){
+    return new Promise((resolve) => {
+      zp_axios
+        .get("/educationTypes")
+        .then((res) => {
+          resolve(res.data.data);
         });
     });
   }
