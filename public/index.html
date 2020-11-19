@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <script type="text/javascript"
+    src="http://map.qq.com/api/js?v=2.exp&key=MFKBZ-LITCX-GTW42-7YTSW-MU2NF-OJFWY"></script>
+  <script>
+    // 把不合格的代理挡掉
+    var agent = window.navigator.userAgent
+    if (agent.match(/(Android|iOS)/g)) {
+
+    }
+  </script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
+</html>
