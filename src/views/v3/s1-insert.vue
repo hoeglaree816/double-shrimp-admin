@@ -9,7 +9,7 @@
         <el-col :span="18">
           <el-row
             class="txt-row"
-            v-for="(value, name, index) in label"
+            v-for="(value, name, index) in newLabel"
             :key="index"
           >
             <el-col
@@ -51,7 +51,7 @@
                 v-model="type"
                 placeholder="请选择"
                 v-if="name === 'typeId'"
-                @change="handletype"
+                @change="handleType"
               >
                 <el-option
                   v-for="item in options"
@@ -66,50 +66,31 @@
               <el-upload
                 class="upload-demo"
                 action="http://106.75.154.40:9005/information/upload"
-                :on-preview="handlePicPreview"
                 :on-remove="handlePicRemove"
                 :on-success="handlePicSuccess"
-                :file-list="fileList"
+                :file-list="picture"
                 :on-exceed="handlePicExceed"
                 list-type="picture"
+                accept="image/*"
                 :limit="1"
               >
                 <el-button size="small" type="warning">上传封面</el-button>
-                <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                <div slot="tip" class="el-upload__tip">只能上传一张图片</div>
               </el-upload>
-              <!-- <el-button style="display:none;" :plain="true" @click="open2">成功</el-button> -->
-              <!-- <el-button style="display:none;" :plain="true" @click="open4">错误</el-button> -->
             </div>
-            <div id="beauty" v-if="name == 'contentUrl'" key="showVideo">
-              <!-- <input
-                id="upload_file"
-                type="file"
-                @change="v_upload_files"
-                multiple="false"
-                accept="video/*"
-              />
-              <el-button
-                class="adjust_position"
-                id="beauty_upload"
-                size="small"
-                type="warning"
-                >上传视频</el-button
-              >
-              <div class="video_name" style="margin-top: 10px">
-                {{ zp_video_name }}
-              </div> -->
+            <div v-if="name == 'contentUrl'" key="showVideo">
               <el-upload
                 class="upload-demo"
                 action="http://106.75.154.40:9005/information/upload"
-                :on-preview="handleVideoPreview"
                 :on-remove="handleVideoRemove"
                 :on-exceed="handleVideoExceed"
                 :on-success="handleVideoSuccess"
-                multiple
+                accept="video/*"
                 :limit="1"
-                :file-list="fileList"
+                :file-list="video"
               >
                 <el-button size="small" type="warning">上传视频</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传一个视频</div>
               </el-upload>
             </div>
           </el-row>
@@ -134,147 +115,132 @@ export default {
   data() {
     return {
       data: new model(),
-      label: model.labels,
-      fileList: [],
-      zp_video_name: "",
-      zp_video_url: "",
+      picture: [],
+      video: [],
       options: [],
       type: "",
     };
   },
+  computed: {
+    newLabel() {
+      return {
+        title: "标题",
+        typeId: "分类",
+        brief: "简介",
+        pic: "封面",
+        contentUrl: "视频",
+      };
+    },
+  },
   methods: {
     add() {
       this.data.createBy = this.$store.state.userName;
-      this.data.pic = this.fileList.length ? this.fileList[0].url : "";
-      this.data.videoUrl = this.zp_video_url ? this.zp_video_url : "";
-      this.data.vedio = true; //默认为视频
-      // if (/(doc)|(ppt)|(pdf)|(pptx)/g.test(this.data.videoUrl))
-      //   this.data.vedio = false;
-      model.add(this.data).then((value) => {
-        this.$router.push("/v3/s1");
-        this.open2();
+      this.data.updateBy = this.$store.state.userName;
+      if (this.picture.length != 0) {
+        this.data.pic = this.picture[0].url;
+      } else {
+        this.errorTip("请上传封面");
+        return;
+      }
+      if (this.video.length != 0) {
+        this.data.contentUrl = this.video[0].url;
+      } else {
+        this.errorTip("请上传视频");
+        return;
+      }
+      model.add(this.data).then((code) => {
+        if (code == 20000) {
+          this.$router.push("/v3/s1");
+          this.successTip("添加成功");
+        } else {
+          this.errorTip("添加失败");
+        }
       });
     },
     back() {
       this.$router.push("/v3/s1");
     },
-    // v_upload_files(e) {
-    //   let files = e.target.files;
-    //   if (
-    //     files[0].type.startsWith("video") ||
-    //     /(doc)|(ppt)|(pdf)|(pptx)/gi.test(files[0].name)
-    //   ) {
-    //     let formData = new FormData();
-    //     // formData重复的往一个值添加数据并不会被覆盖掉，可以全部接收到，可以通过formData.getAll('files')来查看所有插入的数据
-    //     formData.append("file", files[0]);
-    //     console.log(formData);
-    //     // 将本地视频传给后台处理
-    //     let url = "http://106.75.154.40:9005/information/upload";
-    //     let headers;
-    //     let configs = {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     };
-    //     let loadingInstance1 = Loading.service({
-    //       body: true,
-    //       background: "transparent",
-    //     });
-    //     let time = setTimeout(() => {
-    //       loadingInstance1.close();
-    //       this.open4("上传超时");
-    //     }, 3000);
-    //     myzp_axios
-    //       .post(url, formData, configs)
-    //       .then((res) => {
-    //         console.log(res);
-    //         if (res.status == 200) {
-    //           res = res.data;
-    //           if (res.code == 20000) {
-    //             if (res.data) {
-    //               this.zp_video_url = res.data;
-    //               this.zp_video_name = files[0].name;
-    //             }
-    //             loadingInstance1.close();
-    //             clearTimeout(time);
-    //             this.open2();
-    //           } else {
-    //             loadingInstance1.close();
-    //             this.open4(res.message);
-    //           }
-    //         }
-    //         e.target.value = "";
-    //       })
-    //       .catch((err) => {
-    //         this.open4(err);
-    //       });
-    //   } else {
-    //     e.target.value = "";
-    //     this.open4("执行出错");
-    //     return;
-    //   }
-    // },
     handlePicRemove(file, fileList) {
       console.log(file, fileList);
-      fileList = [];
-      this.fileList = fileList;
+      model.deletePicOrVideo(file.response.data).then((code) => {
+        if (code == 20000) {
+          this.successTip("删除成功");
+        } else {
+          this.errorTip("添加失败");
+        }
+      });
+      this.picture = [];
     },
-    handlePicPreview(file) {},
-    handlePicSuccess(response, flie, fileList) {
-      this.fileList = [
+    handlePicSuccess(response, file, fileList) {
+      // console.log("file: ", file);
+      this.picture = [
         {
           url: fileList[0].response.data,
+          name: file.name,
         },
       ];
-      console.log(response);
-      this.open2();
+      // console.log(response);
+      this.successTip("上传成功");
     },
     handlePicExceed(files, fileList) {
-      this.open4("只能上传一张图片");
+      this.errorTip("只能上传一张图片");
     },
     handleVideoRemove(file, fileList) {
       console.log(file, fileList);
-      fileList = [];
-      this.fileList = fileList;
+      model.deletePicOrVideo(file.response.data).then((code) => {
+        if (code == 20000) {
+          this.successTip("删除成功");
+        } else {
+          this.errorTip("添加失败");
+        }
+      });
+      this.video = [];
     },
-    handleVideoPreview(file) {},
-    handleVideoSuccess(response, flie, fileList) {
-      this.fileList = [
+    handleVideoSuccess(response, file, fileList) {
+      // console.log("file: ", file);
+      this.video = [
         {
           url: fileList[0].response.data,
+          name: file.name,
         },
       ];
-      console.log(response);
-      this.open2();
+      // console.log(response);
+      this.successTip("上传成功");
     },
     handleVideoExceed(files, fileList) {
-      this.open4("只能上传一张图片");
+      this.errorTip("只能上传一个视频");
     },
-    open2() {
+    successTip(message) {
       this.$message({
-        message: "上传成功",
+        message,
         type: "success",
       });
     },
-    open4(info) {
+    errorTip(info) {
       this.$message.error(`${info}`);
     },
-    handletype(typeId) {
+    handleType(typeId) {
       this.data.typeId = typeId;
     },
   },
+
   mounted() {
-    model.getEduTypes().then(res=>{
+    model.getEduTypes().then((res) => {
       this.options = res;
-    })
+    });
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../scss/s-insert.scss";
-.form-button {
-  display: flex;
-  justify-content: flex-end;
+.root {
+  .form-button {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .el-upload__tip {
+    margin-left: 80px;
+  }
 }
 </style>

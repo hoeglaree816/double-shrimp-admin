@@ -6,36 +6,14 @@ const zp_axios = axios.create({
   }
 })
 
-function formatTime(date) {
-  //date是传入的时间
-  const d = new Date(date);
-  const month =
-    d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
-  const day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-  const hours = d.getHours() < 10 ? "0" + d.getHours() : d.getHours();
-  const min = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
-  const sec = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
-  const times =
-    d.getFullYear() +
-    "-" +
-    month +
-    "-" +
-    day +
-    " " +
-    hours +
-    ":" +
-    min +
-    ":" +
-    sec;
-  return times;
-}
+
 module.exports = class {
   static labels = {
     id: "id",
     title: "标题",
     typeId: "分类",
     brief: "简介",
-    detail: "详情",
+    // detail: "详情",
     createBy: "创建者",
     createDate: "创建时间",
     updateBy: "更新者",
@@ -91,36 +69,29 @@ module.exports = class {
       zp_axios
         .put("/education/update/" + id, obj[0])
         .then((res) => {
-          resolve({
-            code: res.data.code,
-          });
+          resolve(res.data.code);
         });
     });
   }
   static add(obj) {
     return new Promise((resolve) => {
-      console.log(obj);
+      // console.log(obj);
       obj.createDate = new Date();
+      obj.updateDate = new Date();
       zp_axios
         .post("/education/add/", obj)
         .then((res) => {
-          console.log(obj);
-          let code = res.data.code;
-          resolve({
-            code,
-          });
+          // console.log('res: ', res);
+          resolve(res.data.code);
         }).catch(e => console.log(e));
     });
   }
-  static delete(id) {
+  static deletePicOrVideo(url) {
     return new Promise((resolve) => {
-      zp_axios
-        .post("/file/delete/" + id)
+      axios
+        .delete(`http://106.75.154.40:9005/information/delPic?delUrl=${url}`)
         .then((res) => {
-          let code = res.data.code;
-          resolve({
-            code,
-          });
+          resolve(res.data.code);
         });
     });
   }
@@ -141,5 +112,31 @@ module.exports = class {
           resolve(res.data.data);
         });
     });
+  }
+  static formatTime (date) {
+    if (!date) return "";
+    //date是传入的时间
+    const d = new Date(date);
+    const month =
+      d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
+    const day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+    const hours = d.getHours() < 10 ? "0" + d.getHours() : d.getHours();
+    const min = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
+    const sec = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
+    const times =
+      d.getFullYear() +
+      "-" +
+      month +
+      "-" +
+      day +
+      " " +
+      hours +
+      ":" +
+      min +
+      ":" +
+      sec;
+    console.log("times: ", times);
+
+    return times;
   }
 };

@@ -13,25 +13,33 @@
         v-for="(value, name, index) in label"
         :key="index"
       >
-        <el-col class="txt-key" :span="2"
-          >{{value}}：</el-col
+        <el-col class="txt-key" :span="2">{{ value }}：</el-col>
+        <el-col
+          class="txt-value"
+          :span="20"
+          v-if="name != 'contentUrl' && name != 'pic'"
+          key="noShowVedioAndPic"
         >
-        <el-col class="txt-value" :span="20" v-if="name != 'contentUrl' && name != 'pic'">
-          {{ data[0][name] }}
+          {{ newData[0][name] }}
         </el-col>
         <div class="image_preview" v-if="name == 'pic'">
           <img
-            :src="data[0][name]"
+            :src="newData[0][name]"
             alt
-            style="width: 200px; height: 200px; margin-left: 10px"
+            style="width: 200px; height: 200px; "
           />
         </div>
         <div class="video_preview" v-if="name == 'contentUrl'">
           <video
-            :src="data[0][name]"
+            :src="newData[0][name]"
             controls
             name="media"
-            style="margin-left: 10px; width: 300px; height: 300px"
+            style="
+              
+              margin-top: -35px;
+              width: 300px;
+              height: 300px;
+            "
           ></video>
         </div>
       </el-row>
@@ -49,14 +57,25 @@ export default {
   data() {
     return {
       id: 0,
-      data: [],
+      data: [new model()],
       label: model.labels,
     };
+  },
+  computed: {
+    newData(){
+      for(let key in this.data[0]){
+        if(key == 'createDate' || key == 'updateDate'){
+          this.data[0][key] = model.formatTime( this.data[0][key]);
+        }
+      }
+      return this.data
+    }
   },
   methods: {
     back() {
       this.$router.push("/v3/s1");
     },
+    
     // handleTextPreview(url) {
     //   console.log(/(doc)|(ppt)|(pptx)/.test(url));
     //   if (/(doc)|(ppt)|(pptx)/.test(url))
@@ -83,14 +102,14 @@ export default {
         // console.log('types: ', types);
         model.getById(this.id).then((value) => {
           console.log("value: ", value);
-          types.some(type=>{
-            if(type.id == value[0].typeId){
+          types.some((type) => {
+            if (type.id == value[0].typeId) {
               value[0].typeId = type.name;
               return true;
-            }else{
+            } else {
               return false;
             }
-          })
+          });
           this.data = value;
         });
       });

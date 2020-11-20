@@ -86,14 +86,14 @@ export default {
     },
     handleCurrentChange(pn) {
       this.pn = pn;
-      model.list(this.pn, this.ps).then(value => {
-        this.tableData = value;
+      model.list(this.pn, this.ps).then(res => {
+        this.tableData = res.rows;
       });
     },
     handleSizeChange(ps) {
       this.ps = ps;
-      model.list(this.pn, this.ps).then(value => {
-        this.tableData = value;
+      model.list(this.pn, this.ps).then(res => {
+        this.tableData = res.rows;
       }); 
     },
     handleDelete(index, row) {
@@ -107,8 +107,8 @@ export default {
             message: `成功删除ID为${row.id}的信息`,
             type: "success"
           });
-          model.list(this.pn, this.ps).then(value => {
-            this.tableData = value;
+          model.list(this.pn, this.ps).then(res => {
+            this.tableData = res.rows;
           });
         });
       }).catch(() => {
@@ -164,7 +164,7 @@ export default {
     model.count().then(value => {
       this.total = value;
     });
-    //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
+    // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
       if(item.name =="education"){
         if(!item.children.length == 0){
