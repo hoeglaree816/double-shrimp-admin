@@ -4,7 +4,7 @@
       <common-header></common-header>
     </el-col>
     <el-col :span="3" class="aside">
-      <el-row class="title">数据管理</el-row>
+      <el-row class="title">政策法规</el-row>
       <!-- <el-menu
         default-active="1"
         class="el-menu el-menu-vertical-demo"
@@ -30,13 +30,13 @@
             <i class="el-icon-menu"></i>
             <span slot="title">权限菜单</span>
           </el-menu-item>
-        </router-link>       
+        </router-link>
         <router-link to="/v6/s4">
           <el-menu-item index="4">
             <i class="el-icon-menu"></i>
             <span slot="title">授权菜单</span>
           </el-menu-item>
-        </router-link> 
+        </router-link>
       </el-menu> -->
       <el-menu
         default-active="1"
@@ -45,22 +45,22 @@
         text-color="#BBBBBB"
         active-text-color="#fff"
       >
-        <router-link to="/v7/welcome">
+        <router-link to="/v8/welcome">
           <el-menu-item index="1">
             <i class="el-icon-menu ready"></i>
             <span class="ready" slot="title">欢迎</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/v7/s1">
+        <router-link to="/v8/s1">
           <el-menu-item index="2">
             <i class="el-icon-menu"></i>
-            <span slot="title">产业信息管理</span>
+            <span slot="title">政策法规信息管理</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/v7/s2">
+        <router-link to="/v8/s2">
           <el-menu-item index="3">
             <i class="el-icon-menu"></i>
-            <span slot="title">价格信息管理</span>
+            <span slot="title">政策类型管理</span>
           </el-menu-item>
         </router-link>
       </el-menu>

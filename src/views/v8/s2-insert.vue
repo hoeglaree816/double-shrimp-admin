@@ -1,101 +1,93 @@
 <template>
   <div class="root">
     <div class="title">
-      <el-button icon="el-icon-back" circle @click="backList"></el-button>
+      <el-button icon="el-icon-back" circle @click="back"></el-button>
       <h2>添加</h2>
     </div>
     <main>
-      <!-- 表单 -->
-      <el-form
-        :hide-required-asterisk="true"
-        :model="infoForm"
-        :rules="rules"
-        ref="infoFormRef"
-        label-width="70px"
-        label-position="left"
-      >
-        <el-row :gutter="30">
-          <el-col :span="7">
-            <el-form-item label="对虾种类" label-width="80px" prop="prawn">
-              <el-input
-                v-model="infoForm.prawn"
-                placeholder="请输入虾苗种类"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="对虾价格/元" label-width="120px" prop="price">
-              <el-input-number
-                v-model="infoForm.price"
-                controls-position="right"
-                :min="1"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="时间" label-width="50px" prop="time">
-              <el-date-picker
-                v-model="infoForm.time"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div class="form-button">
-        <el-button type="success" @click="addInfo">确定</el-button>
-      </div>
+      <el-row>
+        <el-col :span="15">
+        <el-form :model="data" :rules="rules" ref="data" label-width="100px" class="demo-ruleForm">
+          <!-- <el-form-item :label="label.id" prop="id">
+            <el-input v-model.number="data.id" placeholder="请输入内容"></el-input>
+          </el-form-item> -->
+          <el-form-item :label="label.name" prop="name">
+            <el-input v-model="data.name" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <!-- <el-form-item :label="label.parentId" prop="parentId">
+            <el-input v-model="data.parentId" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <el-form-item :label="label.state" prop="parentId">
+            <el-input v-model="data.state" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <el-form-item :label="label.module" prop="parentId">
+            <el-input v-model="data.module" placeholder="请输入内容"></el-input>
+            <div>
+              <el-radio-group v-model="data.module">
+                  <el-radio :label='0' border>备选项0</el-radio>
+                  <el-radio :label='1' border>备选项1</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item> -->
+        </el-form>
+        <div class="form-button">
+              <el-button type="success" @click="add('data')">确定添加</el-button>
+          </div>
+        </el-col>
+      </el-row>
     </main>
     <div class="bottom">
       <span>@对虾全产业链云平台-管理后台</span>
     </div>
   </div>
 </template>
+
 <script>
-import axios from "axios";
-const model = require("../../js/v7/s2");
+const model = require("../../js/v8/s2");
 export default {
   data() {
     return {
-      // 表格信息
-      infoForm: new model(),
-
-      // 验证规则
-      rules: model.rules,
+      data: new model(),
+      label: model.labels,
+      rules: {
+        name: [{ required: true, message: "请输入资讯类型", trigger: "blur" }]
+      }
     };
   },
   methods: {
-    // 返回列表
-    backList() {
-      this.$router.push("/v7/s2");
-    },
-
-    // 添加信息
-    addInfo() {
-      this.$refs.infoFormRef.validate(async (valid) => {
-        if (!valid) return false;
-        let info = this.infoForm;
-        info.time = model.time(info.time)
-        console.log(info);
-        model.add(info).then((res) => {
-          if (res.code == 20000) {
-            this.$message.success("添加信息成功！！");
-            this.$router.push("/v7/s2");
-          } else {
-            this.$message.error("添加信息失败！！");
-          }
-        });
+    add(data) {
+      this.$refs[data].validate(valid => {
+        if (valid) {
+          model.add(this.data).then(value => {
+            if(value.data.flag){
+              this.$message({
+                type:"success",
+                message:"修改成功"
+              })
+              this.$router.push("/v8/s2");
+            }else{
+              this.$message({
+                type:"error",
+                message:"修改失败"
+              })
+            }
+            
+          });
+        }
       });
     },
+    back() {
+      this.$router.push("/v8/s2");
+    }
   },
+  mounted() {}
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../scss/s-insert.scss";
-.el-row {
-  margin-bottom: 0;
+.form-button{
+  display: flex;
+  justify-content: center;
 }
 </style>
