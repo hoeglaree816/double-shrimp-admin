@@ -206,7 +206,7 @@ const routes = [
   },
   createRoute(1, 2),
   createRoute(2, 2),
-  createRoute(3, 4),//3.20版本->变成4
+  createRoute(3, 5),//3.20版本->变成4
   createRoute(4, 6),
   createRoute(5, 6),//3.19版本->变成6
   // createRoute(6, 4),

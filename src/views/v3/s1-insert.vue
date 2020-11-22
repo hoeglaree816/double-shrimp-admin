@@ -12,31 +12,13 @@
             v-for="(value, name, index) in newLabel"
             :key="index"
           >
-            <el-col
-              style="text-align: center"
-              class="txt-key"
-              :span="2"
-              v-if="
-                name !== 'id' &&
-                name !== 'createBy' &&
-                name !== 'createDate' &&
-                name !== 'updateBy' &&
-                name !== 'updateDate'
-              "
+            <el-col style="text-align: center" class="txt-key" :span="2"
               >{{ value }}:</el-col
             >
             <el-col
               class="txt-value"
               :span="22"
-              v-if="
-                name !== 'id' &&
-                name !== 'createBy' &&
-                name !== 'createDate' &&
-                name !== 'updateBy' &&
-                name !== 'updateDate' &&
-                name !== 'contentUrl' &&
-                name !== 'pic'
-              "
+              v-if="name !== 'contentUrl' && name !== 'pic'"
               key="noshow"
             >
               <el-input
@@ -136,6 +118,14 @@ export default {
     add() {
       this.data.createBy = this.$store.state.userName;
       this.data.updateBy = this.$store.state.userName;
+      if (
+        this.data.title == "" ||
+        this.data.typeId == "" ||
+        this.data.brief == ""
+      ) {
+        this.errorTip("请填写全部信息");
+        return;
+      }
       if (this.picture.length != 0) {
         this.data.pic = this.picture[0].url;
       } else {
@@ -166,7 +156,7 @@ export default {
         if (code == 20000) {
           this.successTip("删除成功");
         } else {
-          this.errorTip("添加失败");
+          this.errorTip("删除失败");
         }
       });
       this.picture = [];
@@ -191,7 +181,7 @@ export default {
         if (code == 20000) {
           this.successTip("删除成功");
         } else {
-          this.errorTip("添加失败");
+          this.errorTip("删除失败");
         }
       });
       this.video = [];

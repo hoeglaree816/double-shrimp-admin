@@ -17,16 +17,21 @@
         <el-col
           class="txt-value"
           :span="20"
-          v-if="name != 'contentUrl' && name != 'pic'"
+          v-if="name != 'contentUrl' && name != 'pic' && name != 'recommend'"
           key="noShowVedioAndPic"
         >
           {{ newData[0][name] }}
+        </el-col>
+        <el-col v-if="name == 'recommend'" class="txt-value" :span="20">
+          <i v-if="newData[0][name] == false" class="el-icon-close"></i>
+          <i v-else-if="newData[0][name] == true" class="el-icon-check"></i>
+          <i v-else class="el-icon-delete"></i>
         </el-col>
         <div class="image_preview" v-if="name == 'pic'">
           <img
             :src="newData[0][name]"
             alt
-            style="width: 200px; height: 200px; "
+            style="border: 2px solid #003366; border-radius: 6px; width: 400px"
           />
         </div>
         <div class="video_preview" v-if="name == 'contentUrl'">
@@ -34,12 +39,7 @@
             :src="newData[0][name]"
             controls
             name="media"
-            style="
-              
-              margin-top: -35px;
-              width: 300px;
-              height: 300px;
-            "
+            style="border: 2px solid #003366; border-radius: 6px; width: 400px"
           ></video>
         </div>
       </el-row>
@@ -62,30 +62,19 @@ export default {
     };
   },
   computed: {
-    newData(){
-      for(let key in this.data[0]){
-        if(key == 'createDate' || key == 'updateDate'){
-          this.data[0][key] = model.formatTime( this.data[0][key]);
+    newData() {
+      for (let key in this.data[0]) {
+        if (key == "createDate" || key == "updateDate") {
+          this.data[0][key] = model.formatTime(this.data[0][key]);
         }
       }
-      return this.data
-    }
+      return this.data;
+    },
   },
   methods: {
     back() {
       this.$router.push("/v3/s1");
     },
-    
-    // handleTextPreview(url) {
-    //   console.log(/(doc)|(ppt)|(pptx)/.test(url));
-    //   if (/(doc)|(ppt)|(pptx)/.test(url))
-    //     window.open(
-    //       `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-    //         url
-    //       )}`
-    //     );
-    //   else window.open(url);
-    // },
   },
   created() {
     // console.log('this.$route.query: ', this.$route.query);
@@ -119,4 +108,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../scss/s-detail.scss";
+// 状态的√、×的样式
+.el-icon-close{
+  color:#F56C6C;
+  font-size: 23px;
+  font-weight: bold;
+}
+.el-icon-check{
+  color:#67C23A;
+  font-size: 23px;
+  font-weight: bold;
+}
+.right .txt-value{
+  border:2px solid #003366;border-radius:6px;
+}
 </style>

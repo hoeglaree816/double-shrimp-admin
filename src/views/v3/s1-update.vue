@@ -12,31 +12,13 @@
             v-for="(value, name, index) in newLabel"
             :key="index"
           >
-            <el-col
-              style="text-align: center"
-              class="txt-key"
-              :span="2"
-              v-if="
-                name !== 'id' &&
-                name !== 'createBy' &&
-                name !== 'createDate' &&
-                name !== 'updateBy' &&
-                name !== 'updateDate'
-              "
+            <el-col style="text-align: center" class="txt-key" :span="2"
               >{{ value }}:</el-col
             >
             <el-col
               class="txt-value"
               :span="22"
-              v-if="
-                name !== 'id' &&
-                name !== 'createBy' &&
-                name !== 'createDate' &&
-                name !== 'updateBy' &&
-                name !== 'updateDate' &&
-                name !== 'contentUrl' &&
-                name !== 'pic'
-              "
+              v-if="name !== 'contentUrl' && name !== 'pic'"
               key="noshow"
             >
               <el-input
@@ -147,25 +129,27 @@ export default {
         this.errorTip("请上传视频");
         return;
       }
-      model.add(this.data).then((code) => {
+
+      // console.log('this.data: ', this.data);
+      model.update(this.data, this.data.id).then((code) => {
         if (code == 20000) {
           this.$router.push("/v3/s1");
-          this.successTip("添加成功");
+          this.successTip("更新成功");
         } else {
-          this.errorTip("添加失败");
+          this.errorTip("更新失败");
         }
       });
     },
     back() {
       this.$router.push("/v3/s1");
     },
-    handlePicRemove(file, fileList) {
-      console.log(file, fileList);
-      model.deletePicOrVideo(file.response.data).then((code) => {
+    handlePicRemove(file) {
+      console.log(file);
+      model.deletePicOrVideo(file.url).then((code) => {
         if (code == 20000) {
           this.successTip("删除成功");
         } else {
-          this.errorTip("添加失败");
+          this.errorTip("删除失败");
         }
       });
       this.picture = [];
@@ -184,13 +168,13 @@ export default {
     handlePicExceed(files, fileList) {
       this.errorTip("只能上传一张图片");
     },
-    handleVideoRemove(file, fileList) {
-      console.log(file, fileList);
-      model.deletePicOrVideo(file.response.data).then((code) => {
+    handleVideoRemove(file) {
+      console.log(file);
+      model.deletePicOrVideo(file.url).then((code) => {
         if (code == 20000) {
           this.successTip("删除成功");
         } else {
-          this.errorTip("添加失败");
+          this.errorTip("删除失败");
         }
       });
       this.video = [];
@@ -234,14 +218,18 @@ export default {
         // console.log('types: ', types);
         model.getById(this.id).then((value) => {
           console.log("value: ", value);
-          types.some((type) => {
-            if (type.id == value[0].typeId) {
-              this.type = type.name;
-              return true;
-            } else {
-              return false;
-            }
-          });
+          this.type = value[0].typeId;
+          this.video = [
+            {
+              url: value[0].contentUrl,
+              name: value[0].title,
+            },
+          ];
+          this.picture = [
+            {
+              url: value[0].pic,
+            },
+          ];
           this.data = value[0];
         });
       });
@@ -256,6 +244,6 @@ export default {
   justify-content: flex-end;
 }
 .el-upload__tip {
-    margin-left: 80px;
-  }
+  margin-left: 80px;
+}
 </style>

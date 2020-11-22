@@ -1,9 +1,6 @@
 let axios = require('axios');
 const zp_axios = axios.create({
   baseURL: "http://106.75.154.40:9012/education",
-  headers: {
-    'Content-Type': 'application/json'
-  }
 })
 
 
@@ -13,13 +10,14 @@ module.exports = class {
     title: "标题",
     typeId: "分类",
     brief: "简介",
-    // detail: "详情",
+    pic: "封面",
+    contentUrl: "视频",
     createBy: "创建者",
     createDate: "创建时间",
     updateBy: "更新者",
     updateDate: "更新时间",
-    pic: "封面",
-    contentUrl: "视频",
+    clickNum: '点击量',
+    recommend: '推荐',
   };
   constructor(
     id,
@@ -27,24 +25,26 @@ module.exports = class {
     typeId,
     brief,
     pic,
-    detail,
-    videoUrl,
+    contentUrl,
     createBy,
     createDate,
     updateBy,
     updateDate,
+    clickNum,
+    recommend
   ) {
     this.id = id || "";
     this.title = title || "";
     this.typeId = typeId || "";
     this.brief = brief || "";
-    this.detail = detail || "";
+    this.pic = pic || "";
+    this.contentUrl = contentUrl || "";
     this.createBy = createBy || "";
     this.createDate = createDate || "";
     this.updateBy = updateBy || "";
     this.updateDate = updateDate || "";
-    this.pic = pic || "";
-    this.videoUrl = videoUrl || "";
+    this.clickNum = clickNum || "";
+    this.recommend = recommend || "";
   }
 
   static getById(id) {
@@ -57,17 +57,20 @@ module.exports = class {
   static list(page, size) {
     return new Promise((resolve) => {
       zp_axios.get(`/education/findAll/${page}/${size}`).then((res) => {
-        resolve(res.data.data);
+        res = res.data.data;
+        res.rows.forEach(item => {
+          item["createDate"] = this.formatTime(item["createDate"]);
+        })
+        resolve(res);
       });
     });
   }
   static update(obj, id) {
     return new Promise((resolve) => {
-      obj[0].createDate = new Date(obj[0].createDate);
-      obj[0].updateDate = new Date();
-      console.log(obj[0]);
+      obj.updateDate = new Date();
+      console.log(obj);
       zp_axios
-        .put("/education/update/" + id, obj[0])
+        .put("/education/update/" + id, obj)
         .then((res) => {
           resolve(res.data.code);
         });
@@ -95,6 +98,15 @@ module.exports = class {
         });
     });
   }
+  static delete(id) {
+    return new Promise((resolve) => {
+      zp_axios
+        .post(`/file/delete/${id}`)
+        .then((res) => {
+          resolve(res.data.code);
+        });
+    });
+  }
   static count() {
     return new Promise((resolve) => {
       zp_axios
@@ -104,7 +116,7 @@ module.exports = class {
         });
     });
   }
-  static getEduTypes(){
+  static getEduTypes() {
     return new Promise((resolve) => {
       zp_axios
         .get("/educationTypes")
@@ -113,7 +125,65 @@ module.exports = class {
         });
     });
   }
-  static formatTime (date) {
+  static recommendNewById(newId) { //管理员设置资讯为推荐
+    return new Promise((resolve) => {
+      zp_axios.put('/file/recommend/' + newId)
+        .then((res) => {
+          resolve(res)
+        })
+    })
+  }
+  static cancelRecommendNewById(newId) { //管理员取消推荐资讯
+    return new Promise((resolve) => {
+      zp_axios.put('/file/cancelRecommend/' + newId)
+        .then((res) => {
+          resolve(res)
+        })
+    })
+  }
+  static getByKeyWord(value, pn, ps) {
+    console.log('value: ', value);
+    return new Promise((resolve) => {
+      axios.get(`http://106.75.154.40:9010/education/search/time/${pn}/${ps}/1?key=${value}`)
+        .then((res) => {
+          res = res.data.data;
+          res.rows.forEach(item => {
+            item["createDate"] = this.formatTime(item["createDate"]);
+          })
+          resolve(res)
+        })
+        .catch(err => {
+          console.log(err)
+          // this.$message.error("未找到该信息")
+        })
+    })
+  }
+  static getEduByCategoryId(categoryId, pn, ps) { //根据教育类型获取资讯
+    return new Promise((resolve) => {
+      zp_axios.get('/education/search/searchByTypeId/' + categoryId + '/' + pn + '/' + ps)
+        .then((res) => {
+          res = res.data.data;
+          res.rows.forEach(item => {
+            item["createDate"] = this.formatTime(item["createDate"]);
+          })
+          resolve(res)
+        })
+    })
+  }
+  static findDeleteRecord(pn, ps) { //查找删除记录
+    return new Promise((resolve) => {
+      zp_axios.get('/education/findByDelete/' + pn + '/' + ps)
+        .then((res) => {
+          res = res.data.data;
+          res.rows.forEach(item => {
+            item["createDate"] = this.formatTime(item["createDate"]);
+            item["updateDate"] = this.formatTime(item["updateDate"]);
+          })
+          resolve(res)
+        })
+    })
+  }
+  static formatTime(date) {
     if (!date) return "";
     //date是传入的时间
     const d = new Date(date);
@@ -135,7 +205,7 @@ module.exports = class {
       min +
       ":" +
       sec;
-    console.log("times: ", times);
+    // console.log("times: ", times);
 
     return times;
   }
