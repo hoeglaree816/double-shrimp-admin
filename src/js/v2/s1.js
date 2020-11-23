@@ -62,24 +62,10 @@ module.exports = class {
         this.module = module || ''
     }
     static getByKeyWord(value, pn, ps) {
-        let result = []
         return new Promise((resolve) => {
             axios.get(`http://120.78.14.141:9007/industry/search/${pn}/${ps}?key=${value}`)
                 .then((res) => {
-                    // let data = res.data.data.rows
-                    // console.log(data)
-                    // for (let i = 0; i < res.data.data.rows.length; i++) {
-                    //     result.push({
-                    //         id: data[i].id,
-                    //         title: data[i].title,
-                    //         editor: data[i].editor,
-                    //         summary: data[i].summary,
-                    //         content: data[i].content,
-                    //         picture: data[i].picture,
-                    //         typeId: data[i].typeId,
-                    //         creationTime: data[i].creationTime != null ? data[i].creationTime.slice(0, 10) : ''
-                    //     })
-                    // }
+                    console.log('res: ', res);
                     resolve(res)
                 })
                 .catch(err => {
@@ -202,6 +188,7 @@ module.exports = class {
             axios.put('http://106.75.154.40:9005/shrimpIndustry/update/'+obj.id,obj)
                 .then((res)=>{
                     resolve(res)
+                    
                 })
         })
     }

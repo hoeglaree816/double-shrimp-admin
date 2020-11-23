@@ -23,14 +23,6 @@
             style="border:2px solid #003366;border-radius:6px;width:400px;"
             :src="url">
             </el-image>
-            <!-- <el-upload
-              :span="3"
-              class="upload-demo"
-              action="http://123.56.161.2:9005/information/upload"
-              :file-list="fileList"
-              list-type="picture"
-              disabled
-            ></el-upload> -->
           </el-row>
         </div>
         <div class="right">

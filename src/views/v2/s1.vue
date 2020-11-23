@@ -45,17 +45,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="id" width="220" align="center"></el-table-column>
-        <el-table-column prop="title" label="标题" width="580" align="center"></el-table-column>
-        <el-table-column prop="editor" label="作者" width="250" align="center"></el-table-column>
+        <el-table-column prop="title" label="标题" width="380" align="center"></el-table-column>
+        <el-table-column prop="editor" label="作者" width="200" align="center"></el-table-column>
         <el-table-column prop="clickNum" label="点击量" width="120" align="center"></el-table-column>
       </el-table>
       <el-pagination
         style="text-align:center;"
         @current-change="handleCurrentChangeByDelReord"
-        :current-page="reordPn"
-        :page-size="reordPs"
+        :current-page="recordPn"
+        :page-size="recordPs"
         layout="total, prev, pager, next"
-        :total="reordTatol">
+        :total="recordTatol">
       </el-pagination>
     </el-dialog>
     <div class="title">
@@ -80,7 +80,7 @@
         </el-col>
         <el-col :span="12">
           <div class="deleteRecordBtn">
-            <el-button class="delRecordBtn"  type="warning" size="medium"  @click="checkReord(reordPn,reordPs)">删除记录</el-button>
+            <el-button class="delRecordBtn"  type="warning" size="medium"  @click="checkRecord(recordPn,recordPs)">删除记录</el-button>
           </div>
         </el-col>
       </div>
@@ -171,11 +171,11 @@ export default {
       // 打开对话框的标志
       dialogTableVisible: false,
       // 删除记录的当前页
-      reordPn:1,
+      recordPn:1,
       // 删除记录的每页尺寸
-      reordPs:8,
+      recordPs:8,
       // 删除记录的总条数
-      reordTatol:0,
+      recordTatol:0,
       //权限控制字段
       information_information_add:true,//产业资讯添加
       information_information_update:true,//产业资讯更新
@@ -207,6 +207,7 @@ export default {
       }else{
         this.selectDisabled = true;
         model.getByKeyWord(this.input, 1, this.ps).then((value) => {
+          console.log('value: ', value);
           this.tableData = value.data.data.rows;
           this.total = value.data.data.total;
         });
@@ -235,19 +236,19 @@ export default {
       newValue = value!=null ? value.slice(0,10):''; 
       return newValue
     },
-    checkReord(pn,ps){//查询删除记录
+    checkRecord(pn,ps){//查询删除记录
       model.findDeleteRecord(pn,ps).then((value)=>{
         this.dialogTableVisible = true;
         this.gridData = value.data.data.rows;
-        this.reordTatol =value.data.data.total;
+        this.recordTatol =value.data.data.total;
         console.log(value.data.data.rows)
       })
     },
-    handleCurrentChangeByDelReord(pn){//删除记录当前页
-      this.reordPn = pn;
-      model.findDeleteRecord(pn,this.reordPs).then((value)=>{
+    handleCurrentChangeByDelReord(pn){//删除记录的当前页
+      this.recordPn = pn;
+      model.findDeleteRecord(pn,this.recordPs).then((value)=>{
         this.gridData = value.data.data.rows;
-        this.reordTatol =value.data.data.total;
+        this.recordTatol =value.data.data.total;
       })
     },
     async handleDelete(index, row) {//删除资讯

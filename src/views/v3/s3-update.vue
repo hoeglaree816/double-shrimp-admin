@@ -6,17 +6,89 @@
     </div>
     <main>
       <el-row>
-        <el-col :span="16">
-          <el-row class="txt-row" v-for="(value, name, index) in label" :key="index">
-            <el-col class="txt-key" :span="2" v-if="value!=='类型id'"><span>{{ value }}</span></el-col>
-            <el-col class="txt-value" :span="22" v-if="value!=='类型id'">
-              <el-input v-model="data[0].name" placeholder="请输入内容"></el-input>
+        <el-col :span="18">
+          <el-row
+            class="txt-row"
+            v-for="(value, name, index) in newLabel"
+            :key="index"
+          >
+            <el-col style="text-align: center" class="txt-key" :span="2"
+              >{{ value }}:</el-col
+            >
+            <el-col
+              class="txt-value"
+              :span="22"
+              v-if="name !== 'contentUrl' && name !== 'pic'"
+              key="noshow"
+            >
+              <el-input
+                type="textarea"
+                wrap="hard"
+                autosize
+                v-model="data[name]"
+                placeholder="请输入内容"
+                v-if="name !== 'typeId'"
+              ></el-input>
+              <el-select
+                v-model="type"
+                placeholder="请选择"
+                v-if="name === 'typeId'"
+                @change="handleType"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </el-col>
+            <div v-if="name == 'pic'" key="showPic">
+              <el-upload
+                class="upload-demo"
+                action="http://106.75.154.40:9005/information/upload"
+                :on-remove="handlePicRemove"
+                :on-success="handlePicSuccess"
+                :file-list="picture"
+                :on-exceed="handlePicExceed"
+                list-type="picture"
+                accept="image/*"
+                :limit="1"
+              >
+                <el-button size="small" type="warning">上传封面</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传一张图片</div>
+              </el-upload>
+            </div>
+            <div v-if="name == 'contentUrl'" key="showManuscripts">
+              <el-upload
+                class="upload-demo"
+                action="http://106.75.154.40:9005/information/upload"
+                :on-remove="handleManuscriptsRemove"
+                :on-exceed="handleManuscriptsExceed"
+                :on-success="handleManuscriptsSuccess"
+                accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                :limit="1"
+                :file-list="Manuscripts"
+              >
+                <el-button size="small" type="warning">上传文本</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  只能上传一个文本(PPT格式)
+                </div>
+              </el-upload>
+              <el-button
+                style="margin-left: 75px"
+                size="small"
+                type="warning"
+                @click="previewManuscripts"
+                >预览文本</el-button
+              >
+            </div>
           </el-row>
           <div class="form-button">
             <el-button type="success" @click="update">确定修改</el-button>
           </div>
-      </el-col>
+        </el-col>
       </el-row>
     </main>
     <div class="bottom">
@@ -27,57 +99,176 @@
 
 <script>
 const model = require("../../js/v3/s3");
+import { Loading } from "element-ui";
 export default {
   data() {
     return {
       id: 0,
-      data: [new model()],
-      label: model.labels
+      data: new model(),
+      picture: [],
+      Manuscripts: [],
+      options: [],
+      type: "",
     };
   },
+  computed: {
+    newLabel() {
+      return {
+        title: "标题",
+        typeId: "分类",
+        brief: "简介",
+        pic: "封面",
+        contentUrl: "文稿",
+      };
+    },
+  },
   methods: {
-    update(){
-      model.update(this.data,this.id).then((value) => {
-        this.$router.push("/v3/s3");
-        this.open2();
-      })
+    previewManuscripts() {
+      const url = this.Manuscripts[0]?.url;
+      console.log("url: ", url);
+      if (/(ppt)|(pptx)/.test(url)) {
+        window.open(`http://ow365.cn/?i=23209&furl=${url}`);
+        return;
+      }
+      this.errorTip("请上传文稿后预览");
+    },
+    update() {
+      this.data.updateBy = this.$store.state.userName;
+      if (this.picture.length != 0) {
+        this.data.pic = this.picture[0].url;
+      } else {
+        this.errorTip("请上传封面");
+        return;
+      }
+      if (this.Manuscripts.length != 0) {
+        this.data.contentUrl = this.Manuscripts[0].url;
+      } else {
+        this.errorTip("请上传文稿");
+        return;
+      }
+      if (
+        this.data.title == "" ||
+        this.data.typeId == "" ||
+        this.data.brief == ""
+      ) {
+        this.errorTip("请填写全部信息");
+        return;
+      }
+        
+      // console.log('this.data: ', this.data);
+      model.update(this.data, this.data.id).then((code) => {
+        if (code == 20000) {
+          this.$router.push("/v3/s3");
+          this.successTip("更新成功");
+        } else {
+          this.errorTip("更新失败");
+        }
+      });
     },
     back() {
       this.$router.push("/v3/s3");
     },
-    open2() {
-      this.$message({
-        message: "上传成功",
-        type: "success"
+    handlePicRemove(file) {
+      console.log(file);
+      model.deletePicOrPPT(file.url).then((code) => {
+        if (code == 20000) {
+          this.successTip("删除成功");
+        } else {
+          this.errorTip("删除失败");
+        }
       });
-    }
+      this.picture = [];
+    },
+    handlePicSuccess(response, file, fileList) {
+      // console.log("file: ", file);
+      this.picture = [
+        {
+          url: fileList[0].response.data,
+          name: file.name,
+        },
+      ];
+      // console.log(response);
+      this.successTip("上传成功");
+    },
+    handlePicExceed(files, fileList) {
+      this.errorTip("只能上传一张图片");
+    },
+    handleManuscriptsRemove(file) {
+      console.log(file);
+      model.deletePicOrPPT(file.url).then((code) => {
+        if (code == 20000) {
+          this.successTip("删除成功");
+        } else {
+          this.errorTip("删除失败");
+        }
+      });
+      this.Manuscripts = [];
+    },
+    handleManuscriptsSuccess(response, file, fileList) {
+      // console.log("file: ", file);
+      this.Manuscripts = [
+        {
+          url: fileList[0].response.data,
+          name: file.name,
+        },
+      ];
+      // console.log(response);
+      this.successTip("上传成功");
+    },
+    handleManuscriptsExceed(files, fileList) {
+      this.errorTip("只能上传一个文稿");
+    },
+    successTip(message) {
+      this.$message({
+        message,
+        type: "success",
+      });
+    },
+    errorTip(info) {
+      this.$message.error(`${info}`);
+    },
+    handleType(typeId) {
+      this.data.typeId = typeId;
+    },
   },
   created() {
-    this.id = this.$route.query.id
-    model.getById(this.id).then(value => {
-      this.data = value;
-      console.log(value);
-    });
-  }
+    this.id = this.$route.query.id;
+    model
+      .getManuscriptsTypes()
+      .then((res) => {
+        this.options = res;
+        return res;
+      })
+      .then((types) => {
+        // console.log('types: ', types);
+        model.getById(this.id).then((value) => {
+          console.log("value: ", value[0]);
+          this.type = value[0].typeId;
+          this.Manuscripts = [
+            {
+              url: value[0].contentUrl,
+              name: value[0].title,
+            },
+          ];
+          this.picture = [
+            {
+              url: value[0].pic,
+            },
+          ];
+          this.data = value[0];
+        });
+      });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/s-update.scss';
-.txt-row{
+@import "../../scss/s-update.scss";
+.form-button {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  span{
-    color: #606266;
-    font-size: 14px;
-    // font-weight: bolder;
-  }
 }
-.form-button{
-  margin-top: 15px;
-  margin-right: 10px;
-  display: flex;
-  justify-content: flex-end;
+.el-upload__tip {
+  margin-left: 80px;
 }
 </style>

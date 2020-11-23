@@ -8,28 +8,38 @@
       </h2>
     </div>
     <main>
-      <el-row class="txt-row" v-for="(value, name, index) in label" :key="index">
-        <el-col class="txt-key" :span="2">{{ value=='视频'? (data[0]['vedio']?'视频教程':'文本教程'):value }}：</el-col>
-        <el-col class="txt-value" :span="20" v-html="data[0][name]">
-          <!-- {{ data[0][name] }} -->
-          <el-button
-            v-if="value=='视频' && !data[0]['vedio']"
-            type="primary"
-            @click="handleTextPreview(data[0]['videoUrl'])"
-            target="_blank"
-            class="preview"
-            style="margin-left:10px;"
-          >预览</el-button>
+      <el-row
+        class="txt-row"
+        v-for="(value, name, index) in label"
+        :key="index"
+      >
+        <el-col class="txt-key" :span="2">{{ value }}：</el-col>
+        <el-col
+          class="txt-value"
+          :span="20"
+          v-if="name != 'contentUrl' && name != 'pic' && name != 'recommend'"
+          key="noShowVedioAndPic"
+        >
+          {{ newData[0][name] }}
         </el-col>
-        <div class="image_preview" v-if="value=='图片'">
-          <img :src="data[0][name]" alt style="width:200px;height:200px;margin-left:120px;" />
+        <el-col v-if="name == 'recommend'" class="txt-value" :span="20">
+          <i v-if="newData[0][name] == false" class="el-icon-close"></i>
+          <i v-else-if="newData[0][name] == true" class="el-icon-check"></i>
+          <i v-else class="el-icon-delete"></i>
+        </el-col>
+        <div class="image_preview" v-if="name == 'pic'">
+          <img
+            :src="newData[0][name]"
+            alt
+            style="border: 2px solid #003366; border-radius: 6px; width: 400px"
+          />
         </div>
-        <div class="video_preview" v-if="value=='视频' && data[0]['vedio']">
+        <div class="video_preview" v-if="name == 'contentUrl'">
           <video
-            :src="data[0][name]"
+            :src="newData[0][name]"
             controls
             name="media"
-            style="margin-left:120px;width:300px;height:300px;"
+            style="border: 2px solid #003366; border-radius: 6px; width: 400px"
           ></video>
         </div>
       </el-row>
@@ -51,48 +61,65 @@ export default {
       label: model.labels,
     };
   },
+  computed: {
+    newData() {
+      for (let key in this.data[0]) {
+        if (key == "createDate" || key == "updateDate") {
+          this.data[0][key] = model.formatTime(this.data[0][key]);
+        }
+      }
+      return this.data;
+    },
+  },
   methods: {
     back() {
       this.$router.push("/v3/s1");
     },
-    handleTextPreview(url) {
-      console.log(/(doc)|(ppt)|(pptx)/.test(url));
-      if (/(doc)|(ppt)|(pptx)/.test(url))
-        window.open(
-          `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-            url
-          )}`
-        );
-      else window.open(url);
-    },
-    
   },
-  created() {},
-  mounted() {
+  created() {
+    // console.log('this.$route.query: ', this.$route.query);
     this.id = this.$route.query.id;
-    model.getById(this.id).then((value) => {
-      console.log(value);
-      zp_axios
-        .get(
-          `http://106.75.154.40:9012/education/educationTypes/${value[0].typeId}`
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.status == 200) {
-            res = res.data;
-            if (res.code == 20000) {
-              value[0].typeId = res.data.name;
-              this.data = value;
-              this.data[0].detail =JSON.parse(JSON.stringify(this.data[0].detail).replace(/(\\n)/gi,'<br>'))//新增
-              console.log(this.data, this.label);
+  },
+  mounted() {
+    model
+      .getEduTypes()
+      .then((res) => {
+        // console.log('res: ', res);
+        return res;
+      })
+      .then((types) => {
+        // console.log('types: ', types);
+        model.getById(this.id).then((value) => {
+          console.log("value: ", value);
+          types.some((type) => {
+            if (type.id == value[0].typeId) {
+              value[0].typeId = type.name;
+              return true;
+            } else {
+              return false;
             }
-          }
+          });
+          this.data = value;
         });
-    });
+      });
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../scss/s-detail.scss";
+// 状态的√、×的样式
+.el-icon-close{
+  color:#F56C6C;
+  font-size: 23px;
+  font-weight: bold;
+}
+.el-icon-check{
+  color:#67C23A;
+  font-size: 23px;
+  font-weight: bold;
+}
+.right .txt-value{
+  border:2px solid #003366;border-radius:6px;
+}
 </style>

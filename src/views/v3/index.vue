@@ -43,6 +43,12 @@
             <span slot="title">知识产权</span>
           </el-menu-item>
         </router-link>
+        <router-link to="/v3/s5" >
+          <el-menu-item index="5">
+            <i class="el-icon-menu"></i>
+            <span slot="title">类型管理</span>
+          </el-menu-item>
+        </router-link>
       </el-menu>
     </el-col>
     <el-col :span="21" class="main">
