@@ -20,29 +20,25 @@
               <el-form-item label="分类:">
                 <span>{{ props.row.typeId }}</span>
               </el-form-item>
-              <el-form-item label="简介:">
-                <span>{{ props.row.brief }}</span>
+              <el-form-item label="作者:">
+                <span>{{ props.row.editor }}</span>
               </el-form-item>
-              <el-form-item label="发布者:">
-                <span>{{ props.row.createBy }}</span>
+              <el-form-item label="来源:">
+                <span>{{ props.row.source }}</span>
               </el-form-item>
-              <el-form-item label="发布时间:">
-                <span>{{ props.row.createDate}}</span>
+              <el-form-item label="文件:">
+                <span>{{ props.row.file}}</span>
               </el-form-item>
-              <el-form-item label="更新者:">
-                <span>{{ props.row.updateBy }}</span>
+              <el-form-item label="创建时间:">
+                <span>{{ props.row.createDate }}</span>
               </el-form-item>
-              <el-form-item label="更新时间:">
-                <span>{{ props.row.updateDate }}</span>
+              <el-form-item label="发明:">
+                <span>{{ props.row.invention }}</span>
               </el-form-item>
-              <el-form-item label="点击量:">
-                <span>{{ props.row.clickNum }}</span>
+              <el-form-item label="标准:">
+                <span>{{ props.row.standard }}</span>
               </el-form-item>
-              <el-form-item label="是否推荐:">
-                <i v-if="props.row.recommend" class="el-icon-check"></i>
-                <i v-else class="el-icon-close"></i>
-              </el-form-item>
-              <el-form-item label="封面:">
+              <!-- <el-form-item label="封面:">
                 <img
                   :src="props.row.pic"
                   alt
@@ -80,7 +76,7 @@
                     ? ""
                     : "暂无文章或者格式错误"
                 }}</span>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </template>
         </el-table-column>
@@ -97,15 +93,9 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="createBy"
-          label="发布者"
+          prop="editor"
+          label="作者"
           width="200"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="clickNum"
-          label="点击量"
-          width="120"
           align="center"
         ></el-table-column>
       </el-table>
@@ -209,20 +199,22 @@
           <el-table-column
             prop="title"
             label="标题"
+            width="350"
+            align="center"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="editor"
+            label="作者"
             width="200"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="brief"
-            label="简介"
-            width="400"
+            prop="source"
+            label="来源"
+            width="150"
             align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="createBy"
-            label="创建者"
-            width="200"
-            align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="createDate"
@@ -230,16 +222,6 @@
             width="200"
             align="center"
           ></el-table-column>
-          <el-table-column label="是否推荐" width="120" align="center">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.recommend"
-                active-color="#13ce66"
-                inactive-color="#C0C4CC"
-                @change="handleSwitchChange(scope.$index, scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
           <el-table-column
             label="操作"
             fixed="right"
@@ -283,7 +265,7 @@
 
 <script>
 import { mapState } from "vuex";
-const model = require("../../js/v3/s3");
+const model = require("../../js/v3/s4");
 export default {
   data() {
     return {
@@ -308,75 +290,23 @@ export default {
       recordTatol: 0,
       selectDisabled: false,
       //权限控制字段
-      education_course_add: true, //课程添加
-      education_course_update: true, //课程更新
-      education_course_delete: true, //课程删除
-      education_course_select: true, //课程查询
+      education_course_add: false, //课程添加
+      education_course_update: false, //课程更新
+      education_course_delete: false, //课程删除
+      education_course_select: false, //课程查询
     };
   },
   methods: {
-    previewArcticle(url) {
-      console.log("url: ", url);
-      if (/(ppt)|(pptx)/.test(url)) {
-        window.open(`http://ow365.cn/?i=23209&furl=${url}`);
-        return;
-      }
-      this.$message.error("暂无文章或者格式错误");
-    },
-    // 设置为推荐开关变化执行函数
-    handleSwitchChange(index, row) {
-      //index是行数，row是该行数据
-      this.$confirm("是否确定改变此文章推荐设置?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          //执行数据库操作
-          if (row.recommend) {
-            //此时的row.recommend是触发事件之后的，也就是和原先的相反
-            model.recommendNewById(row.id).then((res) => {
-              console.log(res);
-              if (res.data.flag) {
-                this.$message({
-                  type: "success",
-                  message: "设置推荐成功!",
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: "设置推荐失败!",
-                });
-              }
-            });
-          } else {
-            model.cancelRecommendNewById(row.id).then((res) => {
-              console.log(res);
-              if (res.data.flag) {
-                this.$message({
-                  type: "success",
-                  message: "取消推荐成功!",
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: "取消推荐失败!",
-                });
-              }
-            });
-          }
-        })
-        .catch(() => {
-          //取消操作时，将switch改的值取反。使其和初始值保持一致。
-          row.recommend = !row.recommend;
-          this.$message({
-            type: "info",
-            message: "已取消操作",
-          });
-        });
-    },
+    // previewArcticle(url) {
+    //   console.log("url: ", url);
+    //   if (/(ppt)|(pptx)/.test(url)) {
+    //     window.open(`http://ow365.cn/?i=23209&furl=${url}`);
+    //     return;
+    //   }
+    //   this.$message.error("暂无文章或者格式错误");
+    // },
     handleAdd() {
-      this.$router.push("/v3/s3-insert");
+      this.$router.push("/v3/s4-insert");
     },
     handleCurrentChange(pn) {
       this.pn = pn;
@@ -393,7 +323,7 @@ export default {
         });
       } else {
         model
-          .getManuscriptsByCategoryId(this.optionsValue, this.pn, this.ps)
+          .getIntellectualPropertyRightsByCategoryId(this.optionsValue, this.pn, this.ps)
           .then((res) => {
             this.tableData = res.rows;
             this.total = res.total;
@@ -403,7 +333,7 @@ export default {
     handleSizeChange(ps) {
       this.ps = ps;
       model
-        .getManuscriptsByCategoryId(this.optionsValue, 1, this.ps)
+        .getIntellectualPropertyRightsByCategoryId(this.optionsValue, 1, this.ps)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -423,7 +353,7 @@ export default {
                 type: "success",
               });
               model
-                .getManuscriptsByCategoryId(
+                .getIntellectualPropertyRightsByCategoryId(
                   this.optionsValue,
                   this.pn,
                   this.ps
@@ -449,7 +379,7 @@ export default {
     },
     handleDetail(id) {
       this.$router.push({
-        path: "/v3/s3-detail",
+        path: "/v3/s4-detail",
         query: {
           id: id,
         },
@@ -477,7 +407,7 @@ export default {
     },
     handleUpdate(index, row) {
       this.$router.push({
-        path: "/v3/s3-update",
+        path: "/v3/s4-update",
         query: {
           id: row.id,
         },
@@ -487,7 +417,7 @@ export default {
       //选择选择器发生选择值变化执行函数
       // console.log(this.optionsValue)
       model
-        .getManuscriptsByCategoryId(this.optionsValue, 1, this.ps)
+        .getIntellectualPropertyRightsByCategoryId(this.optionsValue, 1, this.ps)
         .then((res) => {
           this.pn = 1;
           this.tableData = res.rows;
@@ -497,7 +427,7 @@ export default {
     handleClear() {
       this.selectDisabled = false;
       model
-        .getManuscriptsByCategoryId(this.optionsValue, 1, this.ps)
+        .getIntellectualPropertyRightsByCategoryId(this.optionsValue, 1, this.ps)
         .then((res) => {
           this.pn = 1;
           this.tableData = res.rows;
@@ -527,39 +457,37 @@ export default {
   },
   mounted() {
     model
-      .getManuscriptsTypes()
+      .getIntellectualPropertyRightsTypes()
       .then((res) => {
         this.options = res;
+        // console.log('res: ', res);
         // 默认为第一个类型
-        this.optionsValue = res[0].id;
+        this.optionsValue = this.options[0].id;
         return this.optionsValue;
       })
       .then((typeId) => {
         // 根据类型获取数据
         model
-          .getManuscriptsByCategoryId(typeId, 1, this.ps)
+          .getIntellectualPropertyRightsByCategoryId(typeId, 1, this.ps)
           .then((res) => {
             this.tableData = res.rows;
             this.total = res.total;
           });
       });
-    model.count().then((value) => {
-      this.total = value;
-    });
     // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
-    this.menulist.forEach((item) => {
-      if (item.name == "education") {
-        if (!item.children.length == 0) {
-          for (let i = 0; i < item.children.length; i++) {
-            if (item.children[i].name == "education_course") {
-              for (let j = 0; j < item.children[i].children.length; j++) {
-                this[item.children[i].children[j].name] = false;
-              }
-            }
-          }
-        }
-      }
-    });
+    // this.menulist.forEach((item) => {
+    //   if (item.name == "education") {
+    //     if (!item.children.length == 0) {
+    //       for (let i = 0; i < item.children.length; i++) {
+    //         if (item.children[i].name == "education_course") {
+    //           for (let j = 0; j < item.children[i].children.length; j++) {
+    //             this[item.children[i].children[j].name] = false;
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
   },
 };
 </script>

@@ -95,6 +95,7 @@
           label="标题"
           width="380"
           align="center"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="createBy"
@@ -308,10 +309,10 @@ export default {
       recordTatol: 0,
       selectDisabled: false,
       //权限控制字段
-      education_course_add: true, //课程添加
-      education_course_update: true, //课程更新
-      education_course_delete: true, //课程删除
-      education_course_select: true, //课程查询
+      education_course_add: false, //课程添加
+      education_course_update: false, //课程更新
+      education_course_delete: false, //课程删除
+      education_course_select: false, //课程查询
     };
   },
   methods: {
@@ -543,9 +544,6 @@ export default {
             this.total = res.total;
           });
       });
-    model.count().then((value) => {
-      this.total = value;
-    });
     // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
       if (item.name == "education") {

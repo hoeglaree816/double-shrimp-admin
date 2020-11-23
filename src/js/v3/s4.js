@@ -9,54 +9,45 @@ module.exports = class {
     id: "id",
     title: "标题",
     typeId: "分类",
-    brief: "简介",
-    pic: "封面",
-    contentUrl: "文档",
-    createBy: "创建者",
+    editor: "作者",
+    source: "来源",
+    file: "文件",
     createDate: "创建时间",
-    updateBy: "更新者",
-    updateDate: "更新时间",
-    clickNum: '点击量',
-    recommend: '推荐',
+    invention: '发明',
+    standard: '标准',
   };
   constructor(
     id,
     title,
     typeId,
-    brief,
-    pic,
-    contentUrl,
-    createBy,
+    editor,
+    source,
+    file,
     createDate,
-    updateBy,
-    updateDate,
-    clickNum,
-    recommend
+    invention,
+    standard,
   ) {
     this.id = id || "";
     this.title = title || "";
     this.typeId = typeId || "";
-    this.brief = brief || "";
-    this.pic = pic || "";
-    this.contentUrl = contentUrl || "";
-    this.createBy = createBy || "";
+    this.editor = editor || "";
+    this.source = source || "";
+    this.file = file || "";
     this.createDate = createDate || "";
-    this.updateBy = updateBy || "";
-    this.updateDate = updateDate || "";
-    this.clickNum = clickNum || "";
-    this.recommend = recommend || "";
+    this.invention = invention || "";
+    this.standard = standard || "";
   }
 
   static getById(id) {
     return new Promise((resolve) => {
-      zp_axios.get("/file/" + id).then((res) => {
+      zp_axios.get("/intellectualPropertyRights/" + id).then((res) => {
         resolve([res.data.data]);
       });
     });
   }
   static list(page, size) {
     return new Promise((resolve) => {
-      zp_axios.get(`/manuscripts/findAll/${page}/${size}`).then((res) => {
+      zp_axios.get(`/intellectualPropertyRights/findAll/${page}/${size}`).then((res) => {
         res = res.data.data;
         res.rows.forEach(item => {
           item["createDate"] = this.formatTime(item["createDate"]);
@@ -67,10 +58,9 @@ module.exports = class {
   }
   static update(obj, id) {
     return new Promise((resolve) => {
-      obj.updateDate = new Date();
       console.log(obj);
       zp_axios
-        .put("/manuscripts/update/" + id, obj)
+        .put("/intellectualPropertyRights/update/" + id, obj)
         .then((res) => {
           resolve(res.data.code);
         });
@@ -80,15 +70,15 @@ module.exports = class {
     return new Promise((resolve) => {
       // console.log(obj);
       obj.createDate = new Date();
-      obj.updateDate = new Date();
       zp_axios
-        .post("/manuscripts/add/", obj)
+        .post("/intellectualPropertyRights/add/", obj)
         .then((res) => {
           // console.log('res: ', res);
           resolve(res.data.code);
         }).catch(e => console.log(e));
     });
   }
+  // 暂不知
   static deletePicOrPPT(url) {
     return new Promise((resolve) => {
       axios
@@ -101,7 +91,7 @@ module.exports = class {
   static delete(id) {
     return new Promise((resolve) => {
       zp_axios
-        .post(`/file/delete/${id}`)
+        .post(`/intellectualPropertyRights/delete/${id}`)
         .then((res) => {
           resolve(res.data.code);
         });
@@ -110,41 +100,47 @@ module.exports = class {
   static count() {
     return new Promise((resolve) => {
       zp_axios
-        .get("/manuscripts")
+        .get("/intellectualPropertyRights")
         .then((res) => {
           resolve(res.data.data.length);
         });
     });
   }
-  static getManuscriptsTypes() {
+  // 获取全部类型，包括父类型和子类型
+  static getIntellectualPropertyRightsTypes() {
     return new Promise((resolve) => {
       zp_axios
-        .get("/manuscriptsTypes")
+        .post("/intellectualPropertyRightsTypes/1/100")
         .then((res) => {
-          resolve(res.data.data);
+          resolve(res.data.data.rows);
         });
     });
   }
-  static recommendNewById(newId) { //管理员设置演示文稿为推荐
-    return new Promise((resolve) => {
-      zp_axios.put('/file/recommend/' + newId)
-        .then((res) => {
-          resolve(res)
-        })
-    })
-  }
-  static cancelRecommendNewById(newId) { //管理员取消推荐
-    return new Promise((resolve) => {
-      zp_axios.put('/file/cancelRecommend/' + newId)
-        .then((res) => {
-          resolve(res)
-        })
-    })
-  }
+  // 根据level获取父类型
+    static getIntellectualPropertyRightsTypesByLevel() {
+      return new Promise((resolve) => {
+        zp_axios
+          .post("/intellectualPropertyRightsTypes/findByLevel/1/1/100")
+          .then((res) => {
+            resolve(res.data.data.rows);
+          });
+      });
+    }
+    // 根据父类型Id获取子类型
+      static getIntellectualPropertyRightsTypesByParentId() {
+        return new Promise((resolve) => {
+          zp_axios
+            .post(`/intellectualPropertyRightsTypes/findSon/${id}/1/100`)
+            .then((res) => {
+              resolve(res.data.data.rows);
+            });
+        });
+      }
+
   static getByKeyWord(value, pn, ps) {
     console.log('value: ', value);
     return new Promise((resolve) => {
-      axios.get(`http://106.75.154.40:9010/education/search/time/${pn}/${ps}/2?key=${value}`)
+      axios.get(`http://106.75.154.40:9010/rights/search/time/${pn}/${ps}?key=${value}`)
         .then((res) => {
           res = res.data.data;
           res.rows.forEach(item => {
@@ -158,10 +154,10 @@ module.exports = class {
         })
     })
   }
-  //根据渔技文章类型获取资讯
-  static getManuscriptsByCategoryId(categoryId, pn, ps) {
+  //根据知识产权类型获取资讯
+  static getIntellectualPropertyRightsByCategoryId(categoryId, pn, ps) {
     return new Promise((resolve) => {
-      zp_axios.get('/manuscripts/search/searchByTypeId/' + categoryId + '/' + pn + '/' + ps)
+      zp_axios.get('/intellectualPropertyRights/findByType/' + categoryId + '/' + pn + '/' + ps)
         .then((res) => {
           res = res.data.data;
           res.rows.forEach(item => {
@@ -175,12 +171,11 @@ module.exports = class {
   //查找删除记录
   static findDeleteRecord(pn, ps) {
     return new Promise((resolve) => {
-      zp_axios.get('/manuscripts/findByDelete/' + pn + '/' + ps)
+      zp_axios.get('/intellectualPropertyRights/findByDelete/' + pn + '/' + ps)
         .then((res) => {
           res = res.data.data;
           res.rows.forEach(item => {
             item["createDate"] = this.formatTime(item["createDate"]);
-            item["updateDate"] = this.formatTime(item["updateDate"]);
           })
           resolve(res)
         })
