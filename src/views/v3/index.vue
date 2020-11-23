@@ -4,7 +4,7 @@
       <common-header></common-header>
     </el-col>
     <el-col :span="3" class="aside">
-            <el-row class="title">远程教育</el-row>
+            <el-row class="title">渔技学堂</el-row>
       <el-menu
         default-active="1"
         class="el-menu el-menu-vertical-demo"

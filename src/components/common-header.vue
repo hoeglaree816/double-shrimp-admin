@@ -168,7 +168,7 @@ export default {
       //权限控制字段，用来控制对应一级菜单栏菜单是否可用
       enterprise:false,//企业管理
       information:false,//产业资讯
-      education:false,//远程教育
+      education:true,//远程教育
       ecommerce:false,//电子商务
       expertConsultation:false,//专家问诊
       authority:false,//权限管理
