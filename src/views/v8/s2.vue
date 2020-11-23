@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div class="title">
-      <h2>政策法规类型管理</h2>
+      <h2>类型管理</h2>
     </div>
     <el-card class="box-card" shadow="always">
       <div class="toolbar">
@@ -43,7 +43,7 @@
           </el-table-column>
           <el-table-column
             prop="name"
-            label="资讯类型"
+            label="类型"
             width="900"
             align="center"
           ></el-table-column>
