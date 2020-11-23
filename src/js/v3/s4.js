@@ -11,10 +11,10 @@ module.exports = class {
     typeId: "分类",
     editor: "作者",
     source: "来源",
-    file: "文件",
-    createDate: "创建时间",
     invention: '发明',
     standard: '标准',
+    createDate: "创建时间",
+    file: "文件",
   };
   constructor(
     id,
@@ -57,6 +57,7 @@ module.exports = class {
     });
   }
   static update(obj, id) {
+    obj["createDate"] = new Date();
     return new Promise((resolve) => {
       console.log(obj);
       zp_axios
@@ -78,8 +79,8 @@ module.exports = class {
         }).catch(e => console.log(e));
     });
   }
-  // 暂不知
-  static deletePicOrPPT(url) {
+  // 
+  static deleteDocOrPdf(url) {
     return new Promise((resolve) => {
       axios
         .delete(`http://106.75.154.40:9005/information/delPic?delUrl=${url}`)
@@ -116,18 +117,18 @@ module.exports = class {
         });
     });
   }
-  // 根据level获取父类型
-    static getIntellectualPropertyRightsTypesByLevel() {
+  // 根据level获取父类型或者子类型
+    static getIntellectualPropertyRightsTypesByLevel(level) {
       return new Promise((resolve) => {
         zp_axios
-          .post("/intellectualPropertyRightsTypes/findByLevel/1/1/100")
+          .post(`/intellectualPropertyRightsTypes/findByLevel/${level}/1/100`)
           .then((res) => {
             resolve(res.data.data.rows);
           });
       });
     }
     // 根据父类型Id获取子类型
-      static getIntellectualPropertyRightsTypesByParentId() {
+      static getIntellectualPropertyRightsTypesByParentId(id) {
         return new Promise((resolve) => {
           zp_axios
             .post(`/intellectualPropertyRightsTypes/findSon/${id}/1/100`)

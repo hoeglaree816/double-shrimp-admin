@@ -26,9 +26,6 @@
               <el-form-item label="来源:">
                 <span>{{ props.row.source }}</span>
               </el-form-item>
-              <el-form-item label="文件:">
-                <span>{{ props.row.file}}</span>
-              </el-form-item>
               <el-form-item label="创建时间:">
                 <span>{{ props.row.createDate }}</span>
               </el-form-item>
@@ -38,32 +35,21 @@
               <el-form-item label="标准:">
                 <span>{{ props.row.standard }}</span>
               </el-form-item>
-              <!-- <el-form-item label="封面:">
-                <img
-                  :src="props.row.pic"
-                  alt
-                  style="
-                    border: 2px solid #003366;
-                    border-radius: 6px;
-                    width: 400px;
-                  "
-                />
-              </el-form-item>
-              <el-form-item label="文稿:">
+              <el-form-item label="文件:">
                 <div
-                  v-if="/(ppt)|(pptx)/.test(props.row.contentUrl)"
+                  v-if="/(doc)|(docx)|(pdf)/.test(props.row.file)"
                   style="margin-left: 40px; margin-top: -40px"
                 >
                   <el-button
                     size="small"
                     type="warning"
-                    @click="previewArcticle(props.row.contentUrl)"
+                    @click="previewArcticle(props.row.file)"
                     >全屏预览</el-button
                   >
                 </div>
                 <iframe
-                  v-if="/(ppt)|(pptx)/.test(props.row.contentUrl)"
-                  :src="`http://ow365.cn/?i=23209&furl=${props.row.contentUrl}`"
+                  v-if="/(doc)|(docx)|(pdf)/.test(props.row.file)"
+                  :src="`http://ow365.cn/?i=23209&furl=${props.row.file}`"
                   style="
                     border: 2px solid #003366;
                     border-radius: 6px;
@@ -72,7 +58,7 @@
                   "
                 ></iframe>
                 <span>{{
-                  /(ppt)|(pptx)/.test(props.row.contentUrl)
+                  /(doc)|(docx)|(pdf)/.test(props.row.file)
                     ? ""
                     : "暂无文章或者格式错误"
                 }}</span>
@@ -208,6 +194,7 @@
             label="作者"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="source"
@@ -457,7 +444,7 @@ export default {
   },
   mounted() {
     model
-      .getIntellectualPropertyRightsTypes()
+      .getIntellectualPropertyRightsTypesByLevel(2)
       .then((res) => {
         this.options = res;
         // console.log('res: ', res);

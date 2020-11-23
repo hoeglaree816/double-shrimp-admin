@@ -7,7 +7,7 @@ module.exports = class {
   static labels = {
     id: "类型id",
     name: "分类",
-    parentId: "父级分类",
+    // parentId: "父级分类",
   };
 
   static typeInfo = ['expertsType','diseaseArticlesTypes']

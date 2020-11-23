@@ -1,13 +1,44 @@
 <template>
   <div class="root">
     <div class="title">
-        <el-button icon="el-icon-back" circle @click="back"></el-button>
-        <h2>课程类型id为：<span>{{ id }}</span> 的详细信息</h2>
+      <el-button icon="el-icon-back" circle @click="back"></el-button>
+      <h2>
+        知识产权信息id为：
+        <span>{{ id }}</span> 的详细信息
+      </h2>
     </div>
     <main>
-      <el-row class="txt-row" v-for="(value, name, index) in label" :key="index">
+      <el-row
+        class="txt-row"
+        v-for="(value, name, index) in label"
+        :key="index"
+      >
         <el-col class="txt-key" :span="2">{{ value }}：</el-col>
-        <el-col class="txt-value" :span="20">{{ data[0][name] }}</el-col>
+        <el-col
+          class="txt-value"
+          :span="20"
+          v-if="name != 'file'"
+          key="noShowVedioAndPic"
+        >
+          {{ newData[0][name] }}
+        </el-col>
+        <div class="text_preview" v-if="name == 'file'">
+          <el-row>
+            <el-button
+              size="small"
+              type="warning"
+              @click="previewManuscripts(newData[0][name])"
+              >全屏预览</el-button
+            >
+          </el-row>
+          <el-row style="margin-left: 100px; margin-top: 10px" v-if="showIframe">
+            <iframe :src="url" style="border: 2px solid #003366;
+                      border-radius: 6px;
+                      width: 700px;
+                      height:500px;" frameborder="0"></iframe>
+          </el-row>
+          <el-row style="margin-left: 100px; margin-top: 10px" v-else>暂无文件或者格式错误</el-row>
+        </div>
       </el-row>
     </main>
     <div class="bottom">
@@ -23,24 +54,82 @@ export default {
     return {
       id: 0,
       data: [new model()],
-      label: model.labels
+      label: model.labels,
+      url: "",
+      showIframe:false
     };
   },
+  computed: {
+    newData() {
+      for (let key in this.data[0]) {
+        if (key == "createDate") {
+          this.data[0][key] = model.formatTime(this.data[0][key]);
+        }
+      }
+      return this.data;
+    },
+  },
   methods: {
-    back(){
-      this.$router.push('/v3/s4')
-    }
+    previewManuscripts(url) {
+      console.log("url: ", url);
+      if (/(doc)|(docx)|(pdf)/.test(url)) {
+        window.open(`http://ow365.cn/?i=23209&furl=${url}`);
+        return;
+      }
+      this.$message.error('暂无文件或者格式错误')
+    },
+    back() {
+      this.$router.push("/v3/s4");
+    },
+  },
+  created() {
+    // console.log('this.$route.query: ', this.$route.query);
+    this.id = this.$route.query.id;
   },
   mounted() {
-    this.id = this.$route.query.id;
-    model.getById(this.id).then(value => {
-      console.log(value)
-      this.data = value;
-    });
-  }
+    model
+      .getIntellectualPropertyRightsTypes(2)
+      .then((res) => {
+        // console.log('res: ', res);
+        return res;
+      })
+      .then((types) => {
+        // console.log('types: ', types);
+        model.getById(this.id).then((value) => {
+          console.log("value: ", value);
+          types.some((type) => {
+            if (type.id == value[0].typeId) {
+              value[0].typeId = type.name;
+              return true;
+            } else {
+              return false;
+            }
+          });
+          this.url = `http://ow365.cn/?i=23209&furl=${value[0].file}`;
+          if(/(doc)|(docx)|(pdf)/.test(this.url)){
+            this.showIframe = true;
+          }
+          this.data = value;
+        });
+      });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/s-detail.scss';
+@import "../../scss/s-detail.scss";
+// 状态的√、×的样式
+.el-icon-close{
+  color:#F56C6C;
+  font-size: 23px;
+  font-weight: bold;
+}
+.el-icon-check{
+  color:#67C23A;
+  font-size: 23px;
+  font-weight: bold;
+}
+.right .txt-value{
+  border:2px solid #003366;border-radius:6px;
+}
 </style>

@@ -212,18 +212,21 @@
             label="标题"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="brief"
             label="简介"
             width="400"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="createBy"
             label="创建者"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="createDate"

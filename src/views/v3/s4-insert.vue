@@ -29,46 +29,16 @@
                 placeholder="请输入内容"
                 v-if="name !== 'typeId'"
               ></el-input>
-              <!-- <el-select
-                v-model="type"
-                placeholder="请选择"
-                v-if="name === 'typeId'"
-                @change="handleType"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select> -->
               <div class="block" v-if="name === 'typeId'">
                 <el-cascader
                   v-model="type"
                   :options="options"
-                  :props="{label:'name',value:'id'}"
+                  :props="{label:'name',value:'id',children:'children'}"
                   @change="handleType"
                 >
                 </el-cascader>
               </div>
             </el-col>
-            <!-- <div v-if="name == 'pic'" key="showPic">
-              <el-upload
-                class="upload-demo"
-                action="http://106.75.154.40:9005/information/upload"
-                :on-remove="handlePicRemove"
-                :on-success="handlePicSuccess"
-                :file-list="picture"
-                :on-exceed="handlePicExceed"
-                list-type="picture"
-                accept="image/*"
-                :limit="1"
-              >
-                <el-button size="small" type="warning">上传封面</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传一张图片</div>
-              </el-upload>
-            </div> -->
             <div v-if="name == 'file'" key="showIntellectualPropertyRights">
               <el-upload
                 class="upload-demo"
@@ -76,13 +46,13 @@
                 :on-remove="handleIntellectualPropertyRightsRemove"
                 :on-exceed="handleIntellectualPropertyRightsExceed"
                 :on-success="handleIntellectualPropertyRightsSuccess"
-                accept="application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                accept="application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 :limit="1"
                 :file-list="IntellectualPropertyRights"
               >
                 <el-button size="small" type="warning">上传文件</el-button>
                 <div slot="tip" class="el-upload__tip">
-                  只能上传一个文件(PPT格式)
+                  只能上传一个文件(支持word,pdf格式)
                 </div>
               </el-upload>
               <el-button
@@ -113,7 +83,6 @@ export default {
   data() {
     return {
       data: new model(),
-      // picture: [],
       IntellectualPropertyRights: [],
       options: [],
       type: "",
@@ -136,7 +105,7 @@ export default {
     previewArcticle() {
       const url = this.IntellectualPropertyRights[0]?.url;
       console.log("url: ", url);
-      if (/(ppt)|(pptx)/.test(url)) {
+      if (/(doc)|(docx)|(pdf)/.test(url)) {
         window.open(`http://ow365.cn/?i=23209&furl=${url}`);
         return;
       }
@@ -154,12 +123,6 @@ export default {
         this.errorTip("请填写全部信息");
         return;
       }
-      // if (this.picture.length != 0) {
-      //   this.data.pic = this.picture[0].url;
-      // } else {
-      //   this.errorTip("请上传封面");
-      //   return;
-      // }
       if (this.IntellectualPropertyRights.length != 0) {
         this.data.file = this.IntellectualPropertyRights[0].url;
       } else {
@@ -167,7 +130,7 @@ export default {
         return;
       }
 
-      // console.log(this.data);
+      console.log(this.data);
       model.add(this.data).then((code) => {
         if (code == 20000) {
           this.$router.push("/v3/s4");
@@ -180,34 +143,10 @@ export default {
     back() {
       this.$router.push("/v3/s4");
     },
-    // handlePicRemove(file, fileList) {
-    //   console.log(file, fileList);
-    //   model.deletePicOrPPT(file.response.data).then((code) => {
-    //     if (code == 20000) {
-    //       this.successTip("删除成功");
-    //     } else {
-    //       this.errorTip("删除失败");
-    //     }
-    //   });
-    //   this.picture = [];
-    // },
-    // handlePicSuccess(response, file, fileList) {
-    //   // console.log("file: ", file);
-    //   this.picture = [
-    //     {
-    //       url: fileList[0].response.data,
-    //       name: file.name,
-    //     },
-    //   ];
-    //   // console.log(response);
-    //   this.successTip("上传成功");
-    // },
-    // handlePicExceed(files, fileList) {
-    //   this.errorTip("只能上传一张图片");
-    // },
+    
     handleIntellectualPropertyRightsRemove(file, fileList) {
       console.log(file, fileList);
-      model.deletePicOrPPT(file.response.data).then((code) => {
+      model.deleteDocOrPdf(file.response.data).then((code) => {
         if (code == 20000) {
           this.successTip("删除成功");
         } else {
@@ -240,14 +179,23 @@ export default {
       this.$message.error(`${info}`);
     },
     handleType(typeId) {
-      this.data.typeId = typeId;
+      console.log('typeId: ', typeId);
+      this.data.typeId = typeId[1];
     },
   },
 
   mounted() {
-    model.getIntellectualPropertyRightsTypesByLevel().then((res) => {
+    // 处理级联选择框
+    model.getIntellectualPropertyRightsTypesByLevel(1).then((res) => {
       this.options = res;
-    });
+      return this.options;
+    }).then(options=>{
+      options.forEach((item,index)=>{
+        model.getIntellectualPropertyRightsTypesByParentId(item.id).then(res=>{
+          this.$set(this.options[index],"children",res);
+        })
+      })
+    })
   },
 };
 </script>
