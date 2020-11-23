@@ -1,42 +1,51 @@
 let axios = require('axios');
-const zp_axios = axios.create({
+const axios_ = axios.create({
   baseURL:"http://106.75.154.40:9012/info",
   headers:{'Content-Type': 'application/json'}
 })
-// zp_axios.defaults.baseURL="http://106.75.154.40:9012/info";
-// zp_axios.header = "Content-Type: application/json";
 module.exports = class {
   static labels = {
     id: "类型id",
-    name: "专家分类",
-    // parentId: "父级分类",
+    name: "分类",
+    parentId: "父级分类",
   };
+
+  static typeInfo = ['expertsType','diseaseArticlesTypes']
+
+  /* 用于根据id查数据 */
+  static typeById = ['expertsType/findById', 'informationTypes']
+
   constructor(id, name) {
     this.id = id || "";
     this.name = name || "";
     // this.parentId = parentId || "";
   }
-  static getById(id) {
+
+  /* 根据id查数据 */
+  static getById(id, type) {
     return new Promise((resolve) => {
-      zp_axios
-        .get("/expertsType/findById/" + id)
+      axios_
+        .get(`/${this.typeById[type]}/` + id)
         .then((res) => {
           resolve([res.data.data]);
         });
     });
   }
-  static list(pn, ps) {
+
+  /* 获取表单数据 */
+  static list(pn, ps, type) {
     return new Promise((resolve) => {
-      zp_axios.post(`/expertsType/${pn}/${ps}`).then((res) => {
-        res=res.data.data
-        resolve(res.rows);
+      axios_.post(`/${this.typeInfo[type]}/${pn}/${ps}`).then((res) => {
+        resolve(res); 
       });
     });
   }
-  static update(obj, id) {
+
+  /* 修改 */
+  static update(obj, id, type) {
     return new Promise((resolve) => {
-      zp_axios
-        .put("/expertsType/update/" + id, obj[0])
+      axios_
+        .put(`/${this.typeInfo[type]}/update/` + id, obj[0])
         .then((res) => {
           let code = res.data.code;
           resolve({
@@ -45,11 +54,13 @@ module.exports = class {
         });
     });
   }
-  static add(obj) {
+
+  /* 添加 */
+  static add(obj, type) {
     return new Promise((resolve) => {
       console.log(obj);
-      zp_axios
-        .post("/expertsType/add", obj)
+      axios_
+        .post(`/${this.typeInfo[type]}/add`, obj)
         .then((res) => {
           let code = res.data.code;
           resolve({
@@ -58,23 +69,5 @@ module.exports = class {
         });
     });
   }
-  // static delete(id) {
-  //   return new Promise((resolve) => {
-  //     zp_axios
-  //       .delete("/expertsType/delete/" + id)
-  //       .then((res) => {
-  //         let code = res.data.code;
-  //         resolve({
-  //           code,
-  //         });
-  //       });
-  //   });
-  // }
-  static count() {
-    return new Promise((resolve) => {
-      zp_axios.get("/expertsType").then((res) => {
-        resolve(res.data.data.length);
-      });
-    });
-  }
+
 };

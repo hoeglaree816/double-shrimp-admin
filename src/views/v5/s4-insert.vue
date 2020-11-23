@@ -2,7 +2,7 @@
   <div class="root">
     <div class="title">
       <el-button icon="el-icon-back" circle @click="back"></el-button>
-      <h2>添加</h2>
+      <h2>添加-{{typeInfo == 0 ? "专家类型" : "文章类型"}}</h2>
     </div>
     <main>
       <el-row>
@@ -27,13 +27,14 @@ const model = require("../../js/v5/s4");
 export default {
   data() {
     return {
+      typeInfo: this.$route.query.type,
       data: new model(),
       label: model.labels
     };
   },
   methods: {
     add(){
-      model.add(this.data).then((value) => {
+      model.add(this.data, this.typeInfo).then((value) => {
         this.$router.push("/v5/s4");
         this.open2();
       })
