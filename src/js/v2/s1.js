@@ -2,8 +2,6 @@ let axiosInstance = require('axios')
 const axios =axiosInstance.create({
     baseURL:"http://106.75.154.40:9012/info"
 })
-// axios.defaults.baseURL = 'http://106.75.154.40:9012/info/';
-// // axios.defaults.baseURL = 'http://localhost:3000/';
 module.exports = class {
     static labels = {
         id: 'id',
