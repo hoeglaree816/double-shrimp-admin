@@ -25,7 +25,7 @@
             <span slot="title">远程教育</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/v3/s2" v-if="education_courseCategory">
+        <router-link to="/v3/s2" v-if="true">
           <el-menu-item index="3">
             <i class="el-icon-menu"></i>
             <span slot="title">渔技文章</span>
@@ -65,8 +65,8 @@ export default {
     return {
       collapse: false,
       //权限控制字段，用来控制对应侧边菜单栏菜单是否可用
-      education_course:false,//课程管理
-      education_courseCategory:false,//课程类别
+      education_course:true,//课程管理
+      education_courseCategory:true,//课程类别
     };
   },
   components: {
@@ -79,8 +79,9 @@ export default {
     document.querySelectorAll(".el-button")[3].style.color = "#fff";
     document.querySelectorAll(".el-button")[3].style.border= "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
+    console.log(this.menulist);
     this.menulist.forEach((item) => {
-      if(item.name =="education"){
+      if(item.name =="fishingTechnologyArticle"){
         if(!item.children.length == 0){
           for(let i=0; i<item.children.length;i++){
           this[item.children[i].name] =true

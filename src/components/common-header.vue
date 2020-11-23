@@ -86,7 +86,7 @@
           <el-button type="text" size="mini" :disabled="!information" @click="toModule('information')">产业资讯</el-button>
         </span>
         <span class="nav-text">
-          <el-button type="text" size="mini" :disabled="!education" @click="toModule('education')" >渔技文章</el-button>
+          <el-button type="text" size="mini" :disabled="!education" @click="toModule('education')" >渔技学堂</el-button>
         </span>
         <span class="nav-text">
           <el-button type="text" size="mini" :disabled="!ecommerce" @click="toModule('ecommerce')" >电子商务</el-button>
@@ -168,7 +168,7 @@ export default {
       //权限控制字段，用来控制对应一级菜单栏菜单是否可用
       enterprise:false,//企业管理
       information:false,//产业资讯
-      education:true,//远程教育
+      education:true,//渔技学堂
       ecommerce:false,//电子商务
       expertConsultation:false,//专家问诊
       authority:false,//权限管理
