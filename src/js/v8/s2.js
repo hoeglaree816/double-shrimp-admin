@@ -4,8 +4,8 @@ const axios =axiosInstance.create({
 })
 module.exports = class {
     static labels = {
-        id: '资讯类型id',
-        name: '资讯类型',
+        id: '类型id',
+        name: '类型',
         parentId: '父级分类',
         state:'状态',
         module:'模块'

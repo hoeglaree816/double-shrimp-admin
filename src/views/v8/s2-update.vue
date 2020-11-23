@@ -2,7 +2,7 @@
   <div class="root">
     <div class="title">
       <el-button icon="el-icon-back" circle @click="back"></el-button>
-      <h2>修改<span>-</span>资讯类型id为：<span>{{ id }}</span> 的详细信息</h2>
+      <h2>修改<span>-</span>id为：<span>{{ id }}</span> 的详细信息</h2>
     </div>
     <!-- <main>
       <el-row class="txt-row" v-for="(value, name, index) in label" :key="index">

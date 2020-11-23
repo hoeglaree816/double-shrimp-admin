@@ -50,7 +50,7 @@ export default {
       data: new model(),
       label: model.labels,
       rules: {
-        name: [{ required: true, message: "请输入资讯类型", trigger: "blur" }]
+        name: [{ required: true, message: "请输入类型", trigger: "blur" }]
       }
     };
   },

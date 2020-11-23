@@ -40,19 +40,13 @@
         <router-link to="/v5/s4" v-if="expertConsultation_type">
           <el-menu-item index="5">
             <i class="el-icon-menu"></i>
-            <span slot="title">专家类型</span>
+            <span slot="title">类型管理</span>
           </el-menu-item>
         </router-link>
         <router-link to="/v5/s5" v-if="expertConsultation_type">
           <el-menu-item index="6">
             <i class="el-icon-menu"></i>
             <span slot="title">技术文章</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/v5/s6" v-if="expertConsultation_type">
-          <el-menu-item index="7">
-            <i class="el-icon-menu"></i>
-            <span slot="title">文章类型</span>
           </el-menu-item>
         </router-link>
       </el-menu>

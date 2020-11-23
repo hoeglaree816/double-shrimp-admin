@@ -54,13 +54,13 @@
         <router-link to="/v8/s1">
           <el-menu-item index="2">
             <i class="el-icon-menu"></i>
-            <span slot="title">政策法规信息管理</span>
+            <span slot="title">信息管理</span>
           </el-menu-item>
         </router-link>
         <router-link to="/v8/s2">
           <el-menu-item index="3">
             <i class="el-icon-menu"></i>
-            <span slot="title">政策类型管理</span>
+            <span slot="title">类型管理</span>
           </el-menu-item>
         </router-link>
       </el-menu>
