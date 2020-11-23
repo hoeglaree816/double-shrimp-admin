@@ -115,4 +115,22 @@ module.exports = class {
         });
     });
   }
+  static getByKeyWord(value, pn, ps) {
+    console.log('value: ', value);
+    return new Promise((resolve) => {
+      axios.get(`http://106.75.154.40:9010/experts/search/replies/${pn}/${ps}?key=${value}`)
+        .then((res) => {
+          console.log('res: ', res);
+          res = res.data.data;
+          res.rows.forEach(item => {
+            item["createDate"] = formatTime(item["createDate"]);
+          })
+          resolve(res)
+        })
+        .catch(err => {
+          console.log(err)
+          // this.$message.error("未找到该信息")
+        })
+    })
+  }
 };

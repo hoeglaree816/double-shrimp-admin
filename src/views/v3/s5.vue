@@ -23,7 +23,7 @@
           placeholder="请选择类型"
           v-model="input"
           class="input-with-select"
-          @change="getInfo"
+          @change="handleTypeChange"
         >
           <el-option
             v-for="item in options"
@@ -67,14 +67,10 @@
           width="680"
           align="center"
         ></el-table-column>
-        <el-table-column
-          prop="parentId"
-          label="父级类型"
-          width="525"
-        >
-        <template slot-scope="scope">
-          {{scope.row.parentId}}
-        </template>
+        <el-table-column prop="parentId" label="父级类型" width="525">
+          <template slot-scope="scope">
+            {{ scope.row.parentId }}
+          </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="200" align="center">
           <template slot-scope="scope">
@@ -135,6 +131,8 @@ export default {
           value: 3,
         },
       ],
+      // 选择知识产权的时候要用的数据
+      allTypes: [],
       //权限控制字段（暂时为false）
       expertConsultation_type_add: false, //类别添加
       expertConsultation_type_update: false, //类别更新
@@ -153,13 +151,22 @@ export default {
       this.pn = 1;
       this.getInfo();
     },
-
+    // 当选择框改变时
+  handleTypeChange(){
+    this.pn = 1;
+    this.getInfo();
+  },
     /* 获取表单数据 */
     getInfo() {
       model.list(this.pn, this.ps, this.input).then((value) => {
         console.log(value.data.data.rows);
-        this.tableData = value.data.data.rows;
-        this.total = value.data.data.total;
+        if(this.input == '3'){
+          this.tableData = this.allTypes.slice((this.pn-1)*this.ps,this.pn*this.ps);
+          this.total = this.allTypes.length;
+        }else{
+          this.tableData = value.data.data.rows;
+          this.total = value.data.data.total;
+        }
       });
     },
 
@@ -212,6 +219,31 @@ export default {
         }
       });
     },
+    // 处理子类型对应父类型
+    handleAllType() {
+      model
+        .getIntellectualPropertyRightsTypesByLevel(1)
+        .then((parents) => {
+          return parents;
+        })
+        .then((parents) => {
+          parents.forEach((item, index) => {
+            console.log('item: ', item);
+            model
+              .getIntellectualPropertyRightsTypesByParentId(item.id)
+              .then((res) => {
+                console.log('res: ', res);
+                res.forEach(child=>{
+                  this.allTypes.push({
+                    id: child.id,
+                    name: child.name,
+                    parentId: item.name,
+                  });
+                })
+              });
+          });
+        });
+    },
   },
   computed: {
     ...mapState(["menulist"]),
@@ -219,6 +251,7 @@ export default {
   mounted() {
     this.getInfo();
     this.authorityManagement();
+    this.handleAllType();
   },
 };
 </script>

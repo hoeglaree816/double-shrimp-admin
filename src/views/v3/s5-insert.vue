@@ -8,8 +8,8 @@
       <el-row>
         <el-col :span="18">
           <el-row class="txt-row" v-for="(value, name, index) in label" :key="index">
-            <el-col class="txt-key" :span="2" v-if="name!=='id'">{{ value }}</el-col>
-            <el-col class="txt-value" :span="22" v-if="name!=='id'">
+            <el-col class="txt-key" :span="2" v-if="name!=='id'&&name!=='typeName'">{{ value }}</el-col>
+            <el-col class="txt-value" :span="22" v-if="name!=='id'&&name!=='typeName'">
               <el-input v-model="data[name]" placeholder="请输入内容"></el-input>
             </el-col>
           </el-row>

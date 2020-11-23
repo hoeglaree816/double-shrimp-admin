@@ -14,6 +14,7 @@
             filterable
             placeholder="按审核状态搜索"
             @change="handleSelectSearch"
+            :disabled="isSearching"
           >
             <el-option
               v-for="item in options"
@@ -27,10 +28,11 @@
       <el-col :span="8">
         <el-input
           :disabled="expertConsultation_post_select"
-          placeholder="按ID搜索"
+          placeholder="按关键字搜索"
           v-model="input"
           class="input-with-select"
           clearable
+          @clear="handleClear"
         >
           <el-button
             :disabled="expertConsultation_post_select"
@@ -138,6 +140,7 @@ export default {
       ps: 5,
       total: 100,
       tableData: [],
+      isSearching:false,
       options: [
         {
           value: "0",
@@ -158,25 +161,55 @@ export default {
       ],
       value: "0",
       //权限控制字段
-      expertConsultation_post_update: true, //帖子审核
-      expertConsultation_post_delete: true, //帖子删除
-      expertConsultation_post_select: true, //帖子查询
+      expertConsultation_post_update: false, //帖子审核
+      expertConsultation_post_delete: false, //帖子删除
+      expertConsultation_post_select: false, //帖子查询
     };
   },
   methods: {
     handleCurrentChange(pn) {
       this.pn = pn;
-      model.list(this.pn, this.ps, this.value).then((res) => {
-        this.total = res.data.total;
-        this.tableData = res.data.rows;
+      if(this.isSearching){
+        model.getByKeyWord(this.input,this.pn,this.ps).then((res) => {
+        if (res) {
+          this.tableData = res.rows;
+          this.total = res.total;
+        }
+        else{
+          this.$message({
+            type: "info",
+            message: "暂无搜索结果",
+          });
+        }
       });
+      }else{
+        model.list(this.pn, this.ps, this.value).then((res) => {
+          this.total = res.data.total;
+          this.tableData = res.data.rows;
+        });
+      }
     },
     handleSizeChange(ps) {
       this.ps = ps;
-      model.list(this.pn, this.ps, this.value).then((res) => {
-        this.total = res.data.total;
-        this.tableData = res.data.rows;
+      if(this.isSearching){
+        model.getByKeyWord(this.input,this.pn,this.ps).then((res) => {
+        if (res) {
+          this.tableData = res.rows;
+          this.total = res.total;
+        }
+        else{
+          this.$message({
+            type: "info",
+            message: "暂无搜索结果",
+          });
+        }
       });
+      }else{
+        model.list(this.pn, this.ps, this.value).then((res) => {
+          this.total = res.data.total;
+          this.tableData = res.data.rows;
+        });
+      }
     },
     handleDelete(index, row) {
       if (this.value == 3) {
@@ -218,14 +251,26 @@ export default {
       });
     },
     handleSearch() {
-      model.getById(this.input).then((res) => {
-        if (res.data) this.tableData = [res.data];
-        else
+      this.isSearching = true;
+      model.getByKeyWord(this.input,1,this.ps).then((res) => {
+        if (res){
+          this.tableData = res.rows;
+          this.total = res.total;
+        } 
+        else{
           this.$message({
             type: "info",
-            message: "无该id信息",
+            message: "暂无搜索结果",
           });
+        }
       });
+    },
+    handleClear() {
+      this.isSearching = false;
+      model.list(1, this.ps, 0).then((res) => {
+          this.total = res.data.total;
+          this.tableData = res.data.rows;
+        });
     },
     handleVerify(index, row) {
       this.$router.push({
@@ -248,26 +293,26 @@ export default {
   },
   mounted() {
     if (this.$route.query.state) this.value = this.$route.query.state;
-    console.log(this.value);
+    // console.log(this.value);
     model.list(this.pn, this.ps, this.value).then((res) => {
       console.log(res);
       this.total = res.data.total;
       this.tableData = res.data.rows;
     });
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
-    this.menulist.forEach((item) => {
-      if (item.name == "expertConsultation") {
-        if (!item.children.length == 0) {
-          for (let i = 0; i < item.children.length; i++) {
-            if (item.children[i].name == "expertConsultation_post") {
-              for (let j = 0; j < item.children[i].children.length; j++) {
-                this[item.children[i].children[j].name] = false;
-              }
-            }
-          }
-        }
-      }
-    });
+    // this.menulist.forEach((item) => {
+    //   if (item.name == "expertConsultation") {
+    //     if (!item.children.length == 0) {
+    //       for (let i = 0; i < item.children.length; i++) {
+    //         if (item.children[i].name == "expertConsultation_post") {
+    //           for (let j = 0; j < item.children[i].children.length; j++) {
+    //             this[item.children[i].children[j].name] = false;
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
   },
 };
 </script>

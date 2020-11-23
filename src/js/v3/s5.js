@@ -85,6 +85,25 @@ module.exports = class {
         break;
     }
   }
-
+  // 根据level获取父类型或者子类型
+  static getIntellectualPropertyRightsTypesByLevel(level) {
+    return new Promise((resolve) => {
+      axios_
+        .post(`/intellectualPropertyRightsTypes/findByLevel/${level}/1/100`)
+        .then((res) => {
+          resolve(res.data.data.rows);
+        });
+    });
+  }
+  // 根据父类型Id获取子类型
+  static getIntellectualPropertyRightsTypesByParentId(id) {
+    return new Promise((resolve) => {
+      axios_
+        .post(`/intellectualPropertyRightsTypes/findSon/${id}/1/100`)
+        .then((res) => {
+          resolve(res.data.data.rows);
+        });
+    });
+  }
 
 };

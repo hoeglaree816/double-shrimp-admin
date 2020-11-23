@@ -17,10 +17,10 @@
             v-for="(value, name, index) in label"
             :key="index"
           >
-            <el-col class="txt-key" :span="2" v-if="value !== '类型id'">{{
+            <el-col class="txt-key" :span="2" v-if="value !== '类型id'&&name!=='typeName'">{{
               value
             }}</el-col>
-            <el-col class="txt-value" :span="22" v-if="value !== '类型id'">
+            <el-col class="txt-value" :span="22" v-if="value !== '类型id'&&name!=='typeName'">
               <el-input
                 v-model="data[0].name"
                 placeholder="请输入内容"
