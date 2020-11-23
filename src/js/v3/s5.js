@@ -1,69 +1,64 @@
 let axios = require('axios');
-const zp_axios = axios.create({
-  baseURL:"http://106.75.154.40:9012/education",
-  headers:{'Content-Type': 'application/json'}
+const axios_ = axios.create({
+  baseURL: "http://106.75.154.40:9012/education",
+  headers: { 'Content-Type': 'application/json' }
 })
-
 module.exports = class {
   static labels = {
     id: "类型id",
-    name: "类型分类",
-    // parentId: "父级分类",
+    name: "分类",
+    parentId: "父级分类",
+    typeName: '',
   };
+
+  static typeInfo = ['manuscriptsTypes', 'technicalArticlesTypes', 'educationTypes', 'intellectualPropertyRightsTypes']
+
   constructor(id, name) {
     this.id = id || "";
     this.name = name || "";
     // this.parentId = parentId || "";
   }
-  static getById(id) {
+
+  /* 根据id查数据 */
+  static getById(id, type) {
     return new Promise((resolve) => {
-      zp_axios
-        .get("/educationTypes/" + id)
+      axios_
+        .get(`/fileTypes/` + id)
         .then((res) => {
-          console.log(res.data.data)
           resolve([res.data.data]);
         });
     });
   }
-  static list(pn, ps) {
+
+  /* 获取表单数据 */
+  static list(pn, ps, type) {
     return new Promise((resolve) => {
-      zp_axios
-        .get("/educationTypes")
-        .then((res) => {
-            console.log(res.data);
-          let data = res.data.data;
-          data = data.filter(
-            (item, index) => index >= (pn - 1) * ps && index < pn * ps
-          );
-          let result = [];
-          for (let i = 0; i < ps; i++) {
-            data[i] ? result.push(data[i]) : "";
-          }
-          console.log(result);
-          resolve(result);
-        });
+      axios_.post(`/${this.typeInfo[type]}/${pn}/${ps}`).then((res) => {
+        resolve(res);
+      });
     });
   }
-  static update(obj,id) {
+
+  /* 修改 */
+  static update(obj, id, type) {
     return new Promise((resolve) => {
-      zp_axios
-        .put(
-          "/educationTypes/update/" + id,
-          obj[0]
-        )
+      axios_
+        .put(`/${this.typeInfo[type]}/update/` + id, obj[0])
         .then((res) => {
           let code = res.data.code;
-            resolve({
-              code,
-            });
+          resolve({
+            code,
+          });
         });
     });
   }
-  static add(obj) {
+
+  /* 添加 */
+  static add(obj, type) {
     return new Promise((resolve) => {
       console.log(obj);
-      zp_axios
-        .post("/educationTypes/add", obj)
+      axios_
+        .post(`/${this.typeInfo[type]}/add`, obj)
         .then((res) => {
           let code = res.data.code;
           resolve({
@@ -72,24 +67,24 @@ module.exports = class {
         });
     });
   }
-  static delete(id) {
-    return new Promise((resolve) => {
-      zp_axios
-        .delete("/educationTypes/delete/" + id)
-        .then((res) => {
-          let code = res.data.code;
-          resolve({
-            code,
-          });
-        });
-    });
+
+  /* 获取 */
+  static getType(type) {
+    switch (type) {
+      case '0':
+        this.typeName = "远程教育";
+        break;
+      case '1':
+        this.typeName = "渔技文章";
+        break;
+      case '2':
+        this.typeName = "演示文稿";
+        break;
+      case '3':
+        this.typeName = "知识产权";
+        break;
+    }
   }
-  static count() {
-    return new Promise((resolve) => {
-        zp_axios.get("/educationTypes").then((res) => {
-          resolve(res.data.data.length);
-        });
-      
-    });
-  }
+
+
 };
