@@ -74,7 +74,8 @@
 import slider from "@/components/slider-check";
 import axiosInstance from "axios";
 const axios = axiosInstance.create({
-  baseURL:"http://106.75.154.40:9012/authority"
+  // baseURL:"http://106.75.154.40:9012/authority"
+  baseURL:"http://106.75.154.40:9003"
 })
 import { initDynamicRoutes } from "../router/index.js";
 export default {
@@ -151,6 +152,7 @@ export default {
         },
       })
         .then((res) => {
+          console.log('res.data: ', res.data);
           loading.close();//关闭加载中效果
           if (!res.data.flag) {
             //登陆失败

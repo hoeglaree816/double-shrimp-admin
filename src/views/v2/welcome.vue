@@ -72,7 +72,8 @@ export default {
       );
       axios({
         method: "get",
-        url: "http://106.75.154.40:9012/authority/admin/authority/" + 'information',
+        // url: "http://106.75.154.40:9012/authority/admin/authority/" + 'information',
+        url: "http://106.75.154.40:9003/admin/authority/" + 'information',
       }).then((res) => {
         resolve(res)
         loading.close();//关闭加载中效果
@@ -82,6 +83,7 @@ export default {
       axios.interceptors.request.eject(myInterceptor);
     }).then((res)=>{
       if(res.data.flag){
+        console.log('res.data: ', res.data);
         this.functionList =res.data.data[0]
       }else{
         this.$message({

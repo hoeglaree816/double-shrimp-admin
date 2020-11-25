@@ -53,8 +53,8 @@ export default {
     commonHeader:commonHeader,
   },
   mounted() {
-    document.querySelectorAll(".el-button")[9].style.color = "#fff";
-    document.querySelectorAll(".el-button")[9].style.border= "3px solid #57F9E9";
+    document.querySelectorAll(".el-button")[1].style.color = "#fff";
+    document.querySelectorAll(".el-button")[1].style.border= "3px solid #57F9E9";
     this._data.imgUrl = this.photo;
     this._data.name = this.userName;
   },

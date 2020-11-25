@@ -12,7 +12,7 @@
             <span>情况说明:</span>
           </div>
           <div class="box-card-divII">
-            <p>欢迎进入 <span>远程教育</span> 模块，您拥有下面展示的权限！！！</p>
+            <p>欢迎进入 <span>渔技学堂</span> 模块，您拥有下面展示的权限！！！</p>
           </div>
           <el-divider content-position="center">拥有权限列表</el-divider>
           <el-row class="box-card-row">
@@ -72,9 +72,11 @@ export default {
       );
       axios({
         method: "get",
-        url: "http://106.75.154.40:9012/authority/admin/authority/" + 'education',
+        // url: "http://106.75.154.40:9012/authority/admin/authority/" + 'fishingTechnologyArticle',
+        url: "http://106.75.154.40:9003/admin/authority/" + 'fishingTechnologySchool',
       }).then((res) => {
         resolve(res)
+        console.log('res: ', res);
         loading.close();//关闭加载中效果
         const token = res.headers.token; //拿到请求头的token
         window.sessionStorage.setItem("token", token); //把token存放在localStorage里面

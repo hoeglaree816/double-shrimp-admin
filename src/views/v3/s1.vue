@@ -86,6 +86,7 @@
           label="发布者"
           width="200"
           align="center"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="clickNum"
@@ -196,24 +197,28 @@
             label="标题"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="brief"
             label="简介"
             width="400"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="createBy"
             label="创建者"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column
             prop="createDate"
             label="创建时间"
             width="200"
             align="center"
+            show-overflow-tooltip
           ></el-table-column>
           <el-table-column label="是否推荐" width="120" align="center">
             <template slot-scope="scope">
@@ -293,10 +298,10 @@ export default {
       recordTatol: 0,
       selectDisabled: false,
       //权限控制字段
-      education_course_add: false, //课程添加
-      education_course_update: false, //课程更新
-      education_course_delete: false, //课程删除
-      education_course_select: false, //课程查询
+      education_course_add: true, //课程添加
+      education_course_update: true, //课程更新
+      education_course_delete: true, //课程删除
+      education_course_select: true, //课程查询
     };
   },
   methods: {
@@ -510,7 +515,7 @@ export default {
       });
     // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
-      if (item.name == "education") {
+      if (item.name == "fishingTechnologySchool") {
         if (!item.children.length == 0) {
           for (let i = 0; i < item.children.length; i++) {
             if (item.children[i].name == "education_course") {

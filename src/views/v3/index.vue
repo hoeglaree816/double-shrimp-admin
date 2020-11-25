@@ -67,6 +67,9 @@ export default {
       //权限控制字段，用来控制对应侧边菜单栏菜单是否可用
       education_course:true,//课程管理
       education_courseCategory:true,//课程类别
+      fishingTechnologyArticle_fishingTechnologyArticle:true,//渔技文章
+      fishingTechnologyArticle_demonstrationDraft:true,//演示文稿
+      fishingTechnologyArticle_intellectualProperty:true,//知识产权
     };
   },
   components: {
@@ -76,12 +79,11 @@ export default {
     ...mapState(["menulist"]),
   },
   mounted() {
-    document.querySelectorAll(".el-button")[3].style.color = "#fff";
-    document.querySelectorAll(".el-button")[3].style.border= "3px solid #57F9E9";
+    document.querySelectorAll(".el-button")[4].style.color = "#fff";
+    document.querySelectorAll(".el-button")[4].style.border= "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
-    console.log(this.menulist);
     this.menulist.forEach((item) => {
-      if(item.name =="fishingTechnologyArticle"){
+      if(item.name =="fishingTechnologySchool"){
         if(!item.children.length == 0){
           for(let i=0; i<item.children.length;i++){
           this[item.children[i].name] =true

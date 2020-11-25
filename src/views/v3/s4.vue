@@ -102,7 +102,7 @@
       <div class="toolbar">
         <el-col :span="4">
           <el-button
-            :disabled="education_course_add"
+            :disabled="fishingTechnologySchool_intellectualProperty_add"
             type="primary"
             size="medium"
             @click="handleAdd"
@@ -112,7 +112,7 @@
         </el-col>
         <el-col :span="8">
           <el-input
-            :disabled="education_course_select"
+            :disabled="fishingTechnologySchool_intellectualProperty_select"
             placeholder="请输入关键字"
             v-model="input"
             class="input-with-select"
@@ -120,7 +120,7 @@
             @clear="handleClear"
           >
             <el-button
-              :disabled="education_course_select"
+              :disabled="fishingTechnologySchool_intellectualProperty_select"
               slot="append"
               @click="handleSearch"
               icon="el-icon-search"
@@ -217,14 +217,14 @@
           >
             <template slot-scope="scope">
               <el-button
-                :disabled="education_course_update"
+                :disabled="fishingTechnologySchool_intellectualProperty_update"
                 size="mini"
                 type="primary"
                 @click="handleUpdate(scope.$index, scope.row)"
                 >编辑<i class="el-icon-edit"></i
               ></el-button>
               <el-button
-                :disabled="education_course_delete"
+                :disabled="fishingTechnologySchool_intellectualProperty_delete"
                 size="mini"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
@@ -277,10 +277,10 @@ export default {
       recordTatol: 0,
       selectDisabled: false,
       //权限控制字段
-      education_course_add: false, //课程添加
-      education_course_update: false, //课程更新
-      education_course_delete: false, //课程删除
-      education_course_select: false, //课程查询
+      fishingTechnologySchool_intellectualProperty_add: true, //课程添加
+      fishingTechnologySchool_intellectualProperty_update: true, //课程更新
+      fishingTechnologySchool_intellectualProperty_delete: true, //课程删除
+      fishingTechnologySchool_intellectualProperty_select: true, //课程查询
     };
   },
   methods: {
@@ -462,19 +462,19 @@ export default {
           });
       });
     // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
-    // this.menulist.forEach((item) => {
-    //   if (item.name == "education") {
-    //     if (!item.children.length == 0) {
-    //       for (let i = 0; i < item.children.length; i++) {
-    //         if (item.children[i].name == "education_course") {
-    //           for (let j = 0; j < item.children[i].children.length; j++) {
-    //             this[item.children[i].children[j].name] = false;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
+    this.menulist.forEach((item) => {
+      if (item.name == "fishingTechnologySchool") {
+        if (!item.children.length == 0) {
+          for (let i = 0; i < item.children.length; i++) {
+            if (item.children[i].name == "fishingTechnologySchool_intellectualProperty") {
+              for (let j = 0; j < item.children[i].children.length; j++) {
+                this[item.children[i].children[j].name] = false;
+              }
+            }
+          }
+        }
+      }
+    });
   },
 };
 </script>

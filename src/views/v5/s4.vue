@@ -7,7 +7,7 @@
       <!-- 添加区域 -->
       <el-col :span="4">
         <el-button
-          :disabled="expertConsultation_type_add"
+          :disabled="type_add"
           type="primary"
           size="medium"
           @click="handleAdd"
@@ -19,7 +19,6 @@
       <!-- 选择区域 -->
       <el-col :span="8">
         <el-select
-          :disabled="expertConsultation_type_select"
           placeholder="请选择类型"
           v-model="input"
           class="input-with-select"
@@ -75,13 +74,13 @@
         <el-table-column label="操作" fixed="right" width="200" align="center">
           <template slot-scope="scope">
             <el-button
-              :disabled="expertConsultation_type_update"
+              :disabled="type_update"
               size="mini"
               type="primary"
               @click="handleUpdate(scope.$index, scope.row)"
               >编辑<i class="el-icon-edit"></i
             ></el-button>
-            <!-- <el-button :disabled="expertConsultation_type_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
+            <!-- <el-button :disabled="type_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -123,14 +122,31 @@ export default {
           value: 1,
         },
       ],
-      //权限控制字段（暂时为false）
-      expertConsultation_type_add: false, //类别添加
-      expertConsultation_type_update: false, //类别更新
-      expertConsultation_type_delete: false, //类别删除
-      expertConsultation_type_select: false, //类别查询
+      //权限控制字段
+      expertConsultation_type_add: true, //专家类别添加
+      expertConsultation_type_update: true, //专家类别更新
+      expertConsultation_type_select: true, //专家类别查询
+      expertConsultation_articleType_add: true, //文章类别添加
+      expertConsultation_articleType_update: true, //文章类别更新
+      expertConsultation_articleType_select: true, //文章类别查询
+      type_update: true,
+      type_add: true,
+      type_select: true,
     };
   },
   methods: {
+    // 更新type权限控制
+    changeTypeAuthority() {
+      if (this.input == 0) {
+        this.type_add = this.expertConsultation_type_add;
+        this.type_select = this.expertConsultation_type_select;
+        this.type_update = this.expertConsultation_type_update;
+      } else {
+        this.type_add = this.expertConsultation_articleType_add;
+        this.type_select = this.expertConsultation_articleType_select;
+        this.type_update = this.expertConsultation_articleType_update;
+      }
+    },
     /* 监听页面数据 */
     handleCurrentChange(pn) {
       this.pn = pn;
@@ -141,9 +157,23 @@ export default {
       this.pn = 1;
       this.getInfo();
     },
-
+    // 重新将所有按钮设为true
+    initAllButton(){
+      this.expertConsultation_type_add = true;
+      this.expertConsultation_type_select = true;
+      this.expertConsultation_type_update = true;
+      this.expertConsultation_articleType_add = true;
+      this.expertConsultation_articleType_select = true;
+      this.expertConsultation_articleType_update = true;
+    },
     /* 获取表单数据 */
     getInfo() {
+      this.initAllButton();
+      if (this.input == 0) {
+        this.authorityManagement("expertConsultation_type");
+      } else {
+        this.authorityManagement("expertConsultation_articleType");
+      }
       model.list(this.pn, this.ps, this.input).then((value) => {
         this.tableData = value.data.data.rows;
         this.total = value.data.data.total;
@@ -183,21 +213,25 @@ export default {
     },
 
     /* 权限控制 */
-    authorityManagement() {
+    authorityManagement(SonName) {
       //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
       this.menulist.forEach((item) => {
         if (item.name == "expertConsultation") {
           if (!item.children.length == 0) {
             for (let i = 0; i < item.children.length; i++) {
-              if (item.children[i].name == "expertConsultation_type") {
+              if (item.children[i].name == SonName) {
                 for (let j = 0; j < item.children[i].children.length; j++) {
-                  this[item.children[i].children[j].name] = false;
+                  if (item.children[i].children[j].name) {
+                    this[item.children[i].children[j].name] = false;
+                  }
                 }
               }
             }
           }
         }
       });
+      // 更新统一后的type,由该type来控制最终的权限
+      this.changeTypeAuthority();
     },
   },
   computed: {
@@ -205,7 +239,7 @@ export default {
   },
   mounted() {
     this.getInfo();
-    this.authorityManagement();
+    this.authorityManagement("expertConsultation_type");
   },
 };
 </script>

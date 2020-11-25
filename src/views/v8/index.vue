@@ -5,39 +5,6 @@
     </el-col>
     <el-col :span="3" class="aside">
       <el-row class="title">政策法规</el-row>
-      <!-- <el-menu
-        default-active="1"
-        class="el-menu el-menu-vertical-demo"
-        background-color="#333"
-        text-color="#BBBBBB"
-        active-text-color="#82aae1"
-        :collapse="collapse"
-      >
-        <router-link to="/v6">
-          <el-menu-item index="1">
-            <i class="el-icon-menu"></i>
-            <span slot="title">用户信息</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/v6/s2">
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">角色信息</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/v6/s3">
-          <el-menu-item index="3">
-            <i class="el-icon-menu"></i>
-            <span slot="title">权限菜单</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/v6/s4">
-          <el-menu-item index="4">
-            <i class="el-icon-menu"></i>
-            <span slot="title">授权菜单</span>
-          </el-menu-item>
-        </router-link>
-      </el-menu> -->
       <el-menu
         default-active="1"
         class="el-menu el-menu-vertical-demo"
@@ -88,8 +55,8 @@ export default {
     // },
   },
   mounted() {
-    document.querySelectorAll(".el-button")[8].style.color = "#fff";
-    document.querySelectorAll(".el-button")[8].style.border =
+    document.querySelectorAll(".el-button")[9].style.color = "#fff";
+    document.querySelectorAll(".el-button")[9].style.border =
       "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
     this.menulist.forEach((item) => {

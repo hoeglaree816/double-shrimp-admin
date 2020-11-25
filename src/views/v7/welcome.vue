@@ -72,7 +72,8 @@ export default {
       );
       axios({
         method: "get",
-        url: "http://106.75.154.40:9012/authority/admin/authority/" + 'authority',
+        // url: "http://106.75.154.40:9012/authority/admin/authority/" + 'authority',
+        url: "http://106.75.154.40:9003/admin/authority/" + 'authority',
       }).then((res) => {
         console.log(res)
         resolve(res)

@@ -332,7 +332,8 @@
 const model = require("../../js/v6/s4");
 import axiosInstance from "axios";
 const axios = axiosInstance.create({
-  baseURL:"http://106.75.154.40:9012/authority"
+  // baseURL:"http://106.75.154.40:9012/authority"
+  baseURL:"http://106.75.154.40:9003"
 })
 import { mapState } from "vuex";
 export default {

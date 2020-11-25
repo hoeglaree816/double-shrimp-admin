@@ -300,19 +300,19 @@ export default {
       this.tableData = res.data.rows;
     });
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
-    // this.menulist.forEach((item) => {
-    //   if (item.name == "expertConsultation") {
-    //     if (!item.children.length == 0) {
-    //       for (let i = 0; i < item.children.length; i++) {
-    //         if (item.children[i].name == "expertConsultation_post") {
-    //           for (let j = 0; j < item.children[i].children.length; j++) {
-    //             this[item.children[i].children[j].name] = false;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
+    this.menulist.forEach((item) => {
+      if (item.name == "expertConsultation") {
+        if (!item.children.length == 0) {
+          for (let i = 0; i < item.children.length; i++) {
+            if (item.children[i].name == "expertConsultation_post") {
+              for (let j = 0; j < item.children[i].children.length; j++) {
+                this[item.children[i].children[j].name] = false;
+              }
+            }
+          }
+        }
+      }
+    });
   },
 };
 </script>

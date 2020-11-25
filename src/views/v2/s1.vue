@@ -365,12 +365,6 @@ export default {
     ...mapState(["menulist"]),
   },
   mounted() {
-    // model.list(this.pn, this.ps).then((value) => {
-    //   this.tableData = value;
-    // });
-    // model.count().then((value) => {
-    //   this.total = value;
-    // });
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
       if(item.name =="information"){

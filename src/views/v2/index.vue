@@ -58,8 +58,8 @@ export default {
     ...mapState(["menulist"]),
   },
   mounted() {
-    document.querySelectorAll(".el-button")[2].style.color = "#fff";
-    document.querySelectorAll(".el-button")[2].style.border= "3px solid #57F9E9";
+    document.querySelectorAll(".el-button")[3].style.color = "#fff";
+    document.querySelectorAll(".el-button")[3].style.border= "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
     this.menulist.forEach((item) => {
       if(item.name =="information"){

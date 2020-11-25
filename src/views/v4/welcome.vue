@@ -72,7 +72,8 @@ export default {
       );
       axios({
         method: "get",
-        url: "http://106.75.154.40:9012/authority/admin/authority/" + 'ecommerce',
+        // url: "http://106.75.154.40:9012/authority/admin/authority/" + 'ecommerce',
+        url: "http://106.75.154.40:9003/admin/authority/" + 'ecommerce',
       }).then((res) => {
         resolve(res)
         loading.close();//关闭加载中效果

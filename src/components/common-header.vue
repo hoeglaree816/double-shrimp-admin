@@ -80,13 +80,16 @@
     <!-- </router-link> -->
     <div class="nav">
         <span class="nav-text">
+          <el-button type="text" size="mini" @click="toModule('welcome')" >欢迎进入</el-button>
+        </span>
+        <span class="nav-text">
           <el-button type="text" size="mini" :disabled="!enterprise" @click="toModule('enterprise')" >基地管理</el-button>
         </span>
         <span class="nav-text">
           <el-button type="text" size="mini" :disabled="!information" @click="toModule('information')">产业资讯</el-button>
         </span>
         <span class="nav-text">
-          <el-button type="text" size="mini" :disabled="!education" @click="toModule('education')" >渔技学堂</el-button>
+          <el-button type="text" size="mini" :disabled="!finshingTechnologyArticle" @click="toModule('finshingTechnologyArticle')" >渔技学堂</el-button>
         </span>
         <span class="nav-text">
           <el-button type="text" size="mini" :disabled="!ecommerce" @click="toModule('ecommerce')" >电子商务</el-button>
@@ -101,10 +104,7 @@
           <el-button type="text" size="mini" :disabled="!dataPresentation" @click="toModule('dataPresentation')" >大数据</el-button>
         </span>
         <span class="nav-text">
-          <el-button type="text" size="mini" :disabled="!policies " @click="toModule('policies')" >政策法规</el-button>
-        </span>
-        <span class="nav-text">
-          <el-button type="text" size="mini" @click="toModule('welcome')" >欢迎进入</el-button>
+          <el-button type="text" size="mini" :disabled="!policyRegulation " @click="toModule('policyRegulation')" >政策法规</el-button>
         </span>
     </div>
     <span class="user">
@@ -168,12 +168,12 @@ export default {
       //权限控制字段，用来控制对应一级菜单栏菜单是否可用
       enterprise:false,//企业管理
       information:false,//产业资讯
-      education:true,//渔技学堂
+      finshingTechnologyArticle:true,//渔技学堂
       ecommerce:false,//电子商务
       expertConsultation:false,//专家问诊
       authority:false,//权限管理
       dataPresentation: true, // 大数据
-      policies:true,//政策法规
+      policyRegulation:true,//政策法规
     };
   },
   methods: {
@@ -224,7 +224,7 @@ export default {
         break;
         case 'information':this.$router.push("/v2");
         break;
-        case 'education':this.$router.push("/v3");
+        case 'finshingTechnologyArticle':this.$router.push("/v3");
         break;
         case 'ecommerce':this.$router.push("/v4");
         break;
@@ -234,7 +234,7 @@ export default {
         break;
         case 'dataPresentation':this.$router.push("/v7");
         break;
-        case 'policies':this.$router.push("/v8");
+        case 'policyRegulation':this.$router.push("/v8");
         break;
         case 'welcome':this.$router.push("/welcome");
         break;
@@ -540,10 +540,11 @@ export default {
       return {
         enterprise:this.enterprise,
         information:this.information,
-        education:this.education,
+        finshingTechnologyArticle:this.finshingTechnologyArticle,
         ecommerce:this.ecommerce,
         expertConsultation:this.expertConsultation,
-        authority:this.authority
+        authority:this.authority,
+        polictRegulation:this.polictRegulation
       }
     }
   },

@@ -7,7 +7,7 @@
       <!-- 添加区域 -->
       <el-col :span="4">
         <el-button
-          :disabled="expertConsultation_type_add"
+          :disabled="type_add"
           type="primary"
           size="medium"
           @click="handleAdd"
@@ -19,7 +19,6 @@
       <!-- 选择区域 -->
       <el-col :span="8">
         <el-select
-          :disabled="expertConsultation_type_select"
           placeholder="请选择类型"
           v-model="input"
           class="input-with-select"
@@ -75,13 +74,13 @@
         <el-table-column label="操作" fixed="right" width="200" align="center">
           <template slot-scope="scope">
             <el-button
-              :disabled="expertConsultation_type_update"
+              :disabled="type_update"
               size="mini"
               type="primary"
               @click="handleUpdate(scope.$index, scope.row)"
               >编辑<i class="el-icon-edit"></i
             ></el-button>
-            <!-- <el-button :disabled="expertConsultation_type_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
+            <!-- <el-button :disabled="education_courseCategory_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -133,14 +132,60 @@ export default {
       ],
       // 选择知识产权的时候要用的数据
       allTypes: [],
-      //权限控制字段（暂时为false）
-      expertConsultation_type_add: false, //类别添加
-      expertConsultation_type_update: false, //类别更新
-      expertConsultation_type_delete: false, //类别删除
-      expertConsultation_type_select: false, //类别查询
+      //权限控制字段
+      education_courseCategory_add: true, //远程教育类别添加
+      education_courseCategory_update: true, //远程教育类别更新
+      education_courseCategory_select: true, //远程教育类别查询
+      fishingTechnologySchool_fishingTechnologyArticleCategory_add: true, //渔技文章类别添加
+      fishingTechnologySchool_fishingTechnologyArticleCategory_update: true, //渔技文章类别更新
+      fishingTechnologySchool_fishingTechnologyArticleCategory_select: true, //渔技文章类别查询
+      fishingTechnologySchool_demonstrationDraftCategory_add: true, //演示文稿类别添加
+      fishingTechnologySchool_demonstrationDraftCategory_update: true, //演示文稿类别更新
+      fishingTechnologySchool_demonstrationDraftCategory_select: true, //演示文稿类别查询
+      fishingTechnologySchool_intellectualPropertyCategory_add: true, //知识产权类别添加
+      fishingTechnologySchool_intellectualPropertyCategory_update: true, //知识产权类别更新
+      fishingTechnologySchool_intellectualPropertyCategory_select: true, //知识产权类别查询
+      type_update: true,
+      type_add: true,
+      type_select: true,
     };
   },
   methods: {
+    // 重新将所有按钮设为true
+    initAllButton() {
+      this.education_courseCategory_add = true;
+      this.education_courseCategory_update = true;
+      this.education_courseCategory_select = true;
+      this.fishingTechnologySchool_fishingTechnologyArticleCategory_add = true;
+      this.fishingTechnologySchool_fishingTechnologyArticleCategory_update = true;
+      this.fishingTechnologySchool_fishingTechnologyArticleCategory_select = true;
+      this.fishingTechnologySchool_demonstrationDraftCategory_add = true;
+      this.fishingTechnologySchool_demonstrationDraftCategory_update = true;
+      this.fishingTechnologySchool_demonstrationDraftCategory_select = true;
+      this.fishingTechnologySchool_intellectualPropertyCategory_add = true;
+      this.fishingTechnologySchool_intellectualPropertyCategory_update = true;
+      this.fishingTechnologySchool_intellectualPropertyCategory_select = true;
+    },
+    // 更新type权限控制
+    changeTypeAuthority() {
+      if (this.input == 0) {
+        this.type_add = this.education_courseCategory_add;
+        this.type_select = this.education_courseCategory_update;
+        this.type_update = this.education_courseCategory_select;
+      } else if(this.input == 1){
+        this.type_add = this.fishingTechnologySchool_fishingTechnologyArticleCategory_add;
+        this.type_select = this.fishingTechnologySchool_fishingTechnologyArticleCategory_update;
+        this.type_update = this.fishingTechnologySchool_fishingTechnologyArticleCategory_select;
+      }else if(this.input == 2){
+        this.type_add = this.fishingTechnologySchool_demonstrationDraftCategory_add;
+        this.type_select = this.fishingTechnologySchool_demonstrationDraftCategory_update;
+        this.type_update = this.fishingTechnologySchool_demonstrationDraftCategory_select;
+      }else if(this.input == 3){
+        this.type_add = this.fishingTechnologySchool_intellectualPropertyCategory_add;
+        this.type_select = this.fishingTechnologySchool_intellectualPropertyCategory_update;
+        this.type_update = this.fishingTechnologySchool_intellectualPropertyCategory_select;
+      }
+    },
     /* 监听页面数据 */
     handleCurrentChange(pn) {
       this.pn = pn;
@@ -152,18 +197,34 @@ export default {
       this.getInfo();
     },
     // 当选择框改变时
-  handleTypeChange(){
-    this.pn = 1;
-    this.getInfo();
-  },
+    handleTypeChange() {
+      this.pn = 1;
+      this.initAllButton();
+      if(this.input == 0){
+        this.authorityManagement("education_courseCategory");
+      }else if(this.input == 1){
+        this.authorityManagement("fishingTechnologySchool_fishingTechnologyArticleCategory");
+      }else if(this.input == 2){
+        this.authorityManagement("fishingTechnologySchool_demonstrationDraftCategory");
+      }
+      else if(this.input == 3){
+        this.authorityManagement("fishingTechnologySchool_intellectualPropertyCategory");
+      }
+      this.changeTypeAuthority();
+      this.getInfo();
+    },
     /* 获取表单数据 */
     getInfo() {
       model.list(this.pn, this.ps, this.input).then((value) => {
         console.log(value.data.data.rows);
-        if(this.input == '3'){
-          this.tableData = this.allTypes.slice((this.pn-1)*this.ps,this.pn*this.ps);
+        if (this.input == "3") {
+          console.log('this.tableData: ', this.tableData);
+          this.tableData = this.allTypes.slice(
+            (this.pn - 1) * this.ps,
+            this.pn * this.ps
+          );
           this.total = this.allTypes.length;
-        }else{
+        } else {
           this.tableData = value.data.data.rows;
           this.total = value.data.data.total;
         }
@@ -203,13 +264,13 @@ export default {
     },
 
     /* 权限控制 */
-    authorityManagement() {
+    authorityManagement(SonName) {
       //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
       this.menulist.forEach((item) => {
-        if (item.name == "expertConsultation") {
+        if (item.name == "fishingTechnologySchool") {
           if (!item.children.length == 0) {
             for (let i = 0; i < item.children.length; i++) {
-              if (item.children[i].name == "expertConsultation_type") {
+              if (item.children[i].name == SonName) {
                 for (let j = 0; j < item.children[i].children.length; j++) {
                   this[item.children[i].children[j].name] = false;
                 }
@@ -228,18 +289,18 @@ export default {
         })
         .then((parents) => {
           parents.forEach((item, index) => {
-            console.log('item: ', item);
+            console.log("item: ", item);
             model
               .getIntellectualPropertyRightsTypesByParentId(item.id)
               .then((res) => {
-                console.log('res: ', res);
-                res.forEach(child=>{
+                console.log("res: ", res);
+                res.forEach((child) => {
                   this.allTypes.push({
                     id: child.id,
                     name: child.name,
                     parentId: item.name,
                   });
-                })
+                });
               });
           });
         });
@@ -250,7 +311,7 @@ export default {
   },
   mounted() {
     this.getInfo();
-    this.authorityManagement();
+    this.authorityManagement("education_courseCategory");
     this.handleAllType();
   },
 };

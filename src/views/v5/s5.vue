@@ -11,6 +11,7 @@
             filterable
             placeholder="按审核状态搜索"
             @change="handleSelectSearch"
+            :disabled="expertConsultation_technologyArticle_select"
           >
             <el-option
               v-for="item in options"
@@ -24,14 +25,15 @@
       </el-col>
       <el-col :span="8">
         <el-input
-          :disabled="expertConsultation_reply_select"
+          :disabled="expertConsultation_technologyArticle_select"
           placeholder="按ID搜索"
           v-model="input"
           class="input-with-select"
           clearable
+          
         >
           <el-button
-            :disabled="expertConsultation_reply_select"
+            :disabled="expertConsultation_technologyArticle_select"
             slot="append"
             @click="handleSearch"
             icon="el-icon-search"
@@ -94,7 +96,7 @@
         <el-table-column label="操作" fixed="right" width="200" align="center">
           <template slot-scope="scope">
             <el-button
-              :disabled="information_information_update"
+              :disabled="expertConsultation_technologyArticle_update"
               v-if="value == 0"
               size="mini"
               type="primary"
@@ -102,7 +104,7 @@
               >审核<i class="el-icon-edit"></i
             ></el-button>
             <el-button
-              :disabled="information_information_delete"
+              :disabled="expertConsultation_technologyArticle_delete"
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)"
@@ -155,10 +157,10 @@ export default {
       ],
       value: "2",
       //权限控制字段
-      information_information_add: true, //技术文章添加
-      information_information_update: true, //技术文章更新
-      information_information_delete: true, //技术文章删除
-      information_information_select: true, //技术文章查询
+      expertConsultation_technologyArticle_add: true, //技术文章添加
+      expertConsultation_technologyArticle_update: true, //技术文章更新
+      expertConsultation_technologyArticle_delete:true,//技术文章删除
+      expertConsultation_technologyArticle_select: true, //技术文章查询
     };
   },
   methods: {
@@ -279,10 +281,10 @@ export default {
     });
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
-      if (item.name == "information") {
+      if (item.name == "expertConsultation") {
         if (!item.children.length == 0) {
           for (let i = 0; i < item.children.length; i++) {
-            if (item.children[i].name == "information_information") {
+            if (item.children[i].name == "expertConsultation_technologyArticle") {
               for (let j = 0; j < item.children[i].children.length; j++) {
                 this[item.children[i].children[j].name] = false;
               }

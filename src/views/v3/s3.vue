@@ -127,7 +127,7 @@
       <div class="toolbar">
         <el-col :span="4">
           <el-button
-            :disabled="education_course_add"
+            :disabled="fishingTechnologySchool_demonstrationDraft_add"
             type="primary"
             size="medium"
             @click="handleAdd"
@@ -137,7 +137,7 @@
         </el-col>
         <el-col :span="8">
           <el-input
-            :disabled="education_course_select"
+            :disabled="fishingTechnologySchool_demonstrationDraft_select"
             placeholder="请输入关键字"
             v-model="input"
             class="input-with-select"
@@ -145,7 +145,7 @@
             @clear="handleClear"
           >
             <el-button
-              :disabled="education_course_select"
+              :disabled="fishingTechnologySchool_demonstrationDraft_select"
               slot="append"
               @click="handleSearch"
               icon="el-icon-search"
@@ -252,14 +252,14 @@
           >
             <template slot-scope="scope">
               <el-button
-                :disabled="education_course_update"
+                :disabled="fishingTechnologySchool_demonstrationDraft_update"
                 size="mini"
                 type="primary"
                 @click="handleUpdate(scope.$index, scope.row)"
                 >编辑<i class="el-icon-edit"></i
               ></el-button>
               <el-button
-                :disabled="education_course_delete"
+                :disabled="fishingTechnologySchool_demonstrationDraft_delete"
                 size="mini"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
@@ -312,10 +312,10 @@ export default {
       recordTatol: 0,
       selectDisabled: false,
       //权限控制字段
-      education_course_add: false, //课程添加
-      education_course_update: false, //课程更新
-      education_course_delete: false, //课程删除
-      education_course_select: false, //课程查询
+      fishingTechnologySchool_demonstrationDraft_add: true, //演示文稿添加
+      fishingTechnologySchool_demonstrationDraft_update: true, //演示文稿更新
+      fishingTechnologySchool_demonstrationDraft_delete: true, //演示文稿删除
+      fishingTechnologySchool_demonstrationDraft_select: true, //演示文稿查询
     };
   },
   methods: {
@@ -549,10 +549,10 @@ export default {
       });
     // 拿到权限列表循环判断是否有权限，有则将对应权限字段至false
     this.menulist.forEach((item) => {
-      if (item.name == "education") {
+      if (item.name == "fishingTechnologySchool") {
         if (!item.children.length == 0) {
           for (let i = 0; i < item.children.length; i++) {
-            if (item.children[i].name == "education_course") {
+            if (item.children[i].name == "fishingTechnologySchool_demonstrationDraft") {
               for (let j = 0; j < item.children[i].children.length; j++) {
                 this[item.children[i].children[j].name] = false;
               }

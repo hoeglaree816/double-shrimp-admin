@@ -37,16 +37,16 @@
             <span slot="title">审核回帖</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/v5/s4" v-if="expertConsultation_type">
-          <el-menu-item index="5">
-            <i class="el-icon-menu"></i>
-            <span slot="title">类型管理</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/v5/s5" v-if="expertConsultation_type">
+        <router-link to="/v5/s5" v-if="expertConsultation_technologyArticle">
           <el-menu-item index="6">
             <i class="el-icon-menu"></i>
             <span slot="title">技术文章</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="/v5/s4" v-if="expertConsultation_type || expertConsultation_articleType">
+          <el-menu-item index="5">
+            <i class="el-icon-menu"></i>
+            <span slot="title">类型管理</span>
           </el-menu-item>
         </router-link>
       </el-menu>
@@ -68,6 +68,8 @@ export default {
       expertConsultation_post:false,//审核帖子
       expertConsultation_expert:false,//审核专家
       expertConsultation_reply:false,//审核回帖
+      expertConsultation_technologyArticle:false,//审核文章
+      expertConsultation_articleType:false,//文章类型
       expertConsultation_type:false,//专家类型
     };
   },
@@ -78,8 +80,8 @@ export default {
     ...mapState(["menulist"]),
   },
   mounted() {
-    document.querySelectorAll(".el-button")[5].style.color = "#fff";
-    document.querySelectorAll(".el-button")[5].style.border= "3px solid #57F9E9";
+    document.querySelectorAll(".el-button")[6].style.color = "#fff";
+    document.querySelectorAll(".el-button")[6].style.border= "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
     this.menulist.forEach((item) => {
       if(item.name =="expertConsultation"){

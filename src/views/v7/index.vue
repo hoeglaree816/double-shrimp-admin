@@ -88,8 +88,8 @@ export default {
     // },
   },
   mounted() {
-    document.querySelectorAll(".el-button")[7].style.color = "#fff";
-    document.querySelectorAll(".el-button")[7].style.border =
+    document.querySelectorAll(".el-button")[8].style.color = "#fff";
+    document.querySelectorAll(".el-button")[8].style.border =
       "3px solid #57F9E9";
     //拿到权限列表循环判断是否有权限，有则将对应权限字段至true
     this.menulist.forEach((item) => {

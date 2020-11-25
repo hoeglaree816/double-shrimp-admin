@@ -1,6 +1,7 @@
 const axiosInstance = require("axios").default;
 const axios = axiosInstance.create({
-  baseURL: 'http://106.75.154.40:9012/authority'
+  // baseURL: 'http://106.75.154.40:9012/authority'
+  baseURL: 'http://106.75.154.40:9003'
 });
 module.exports = class {
   //用户信息
