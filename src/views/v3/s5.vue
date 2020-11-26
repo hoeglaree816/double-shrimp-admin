@@ -172,15 +172,15 @@ export default {
         this.type_add = this.education_courseCategory_add;
         this.type_select = this.education_courseCategory_update;
         this.type_update = this.education_courseCategory_select;
-      } else if(this.input == 1){
+      } else if (this.input == 1) {
         this.type_add = this.fishingTechnologySchool_fishingTechnologyArticleCategory_add;
         this.type_select = this.fishingTechnologySchool_fishingTechnologyArticleCategory_update;
         this.type_update = this.fishingTechnologySchool_fishingTechnologyArticleCategory_select;
-      }else if(this.input == 2){
+      } else if (this.input == 2) {
         this.type_add = this.fishingTechnologySchool_demonstrationDraftCategory_add;
         this.type_select = this.fishingTechnologySchool_demonstrationDraftCategory_update;
         this.type_update = this.fishingTechnologySchool_demonstrationDraftCategory_select;
-      }else if(this.input == 3){
+      } else if (this.input == 3) {
         this.type_add = this.fishingTechnologySchool_intellectualPropertyCategory_add;
         this.type_select = this.fishingTechnologySchool_intellectualPropertyCategory_update;
         this.type_update = this.fishingTechnologySchool_intellectualPropertyCategory_select;
@@ -200,17 +200,22 @@ export default {
     handleTypeChange() {
       this.pn = 1;
       this.initAllButton();
-      if(this.input == 0){
+      if (this.input == 0) {
         this.authorityManagement("education_courseCategory");
-      }else if(this.input == 1){
-        this.authorityManagement("fishingTechnologySchool_fishingTechnologyArticleCategory");
-      }else if(this.input == 2){
-        this.authorityManagement("fishingTechnologySchool_demonstrationDraftCategory");
+      } else if (this.input == 1) {
+        this.authorityManagement(
+          "fishingTechnologySchool_fishingTechnologyArticleCategory"
+        );
+      } else if (this.input == 2) {
+        this.authorityManagement(
+          "fishingTechnologySchool_demonstrationDraftCategory"
+        );
+      } else if (this.input == 3) {
+        this.authorityManagement(
+          "fishingTechnologySchool_intellectualPropertyCategory"
+        );
       }
-      else if(this.input == 3){
-        this.authorityManagement("fishingTechnologySchool_intellectualPropertyCategory");
-      }
-      this.changeTypeAuthority();
+      
       this.getInfo();
     },
     /* 获取表单数据 */
@@ -218,7 +223,6 @@ export default {
       model.list(this.pn, this.ps, this.input).then((value) => {
         console.log(value.data.data.rows);
         if (this.input == "3") {
-          console.log('this.tableData: ', this.tableData);
           this.tableData = this.allTypes.slice(
             (this.pn - 1) * this.ps,
             this.pn * this.ps
@@ -279,6 +283,7 @@ export default {
           }
         }
       });
+      this.changeTypeAuthority();
     },
     // 处理子类型对应父类型
     handleAllType() {
