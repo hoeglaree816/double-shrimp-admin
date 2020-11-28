@@ -3,126 +3,128 @@
     <div class="title">
       <h2>技术文章</h2>
     </div>
-    <div class="toolbar">
-      <el-col :span="6">
-        <template>
-          <el-select
-            v-model="value"
-            filterable
-            placeholder="按审核状态搜索"
-            @change="handleSelectSearch"
+    <el-card class="box-card" shadow="always">
+      <div class="toolbar">
+        <el-col :span="6">
+          <template>
+            <el-select
+              v-model="value"
+              filterable
+              placeholder="按审核状态搜索"
+              @change="handleSelectSearch"
+              :disabled="expertConsultation_technologyArticle_select"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </template>
+        </el-col>
+        <el-col :span="8">
+          <el-input
             :disabled="expertConsultation_technologyArticle_select"
+            placeholder="按ID搜索"
+            v-model="input"
+            class="input-with-select"
+            clearable
+            
           >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </template>
-      </el-col>
-      <el-col :span="8">
-        <el-input
-          :disabled="expertConsultation_technologyArticle_select"
-          placeholder="按ID搜索"
-          v-model="input"
-          class="input-with-select"
-          clearable
-          
-        >
-          <el-button
-            :disabled="expertConsultation_technologyArticle_select"
-            slot="append"
-            @click="handleSearch"
-            icon="el-icon-search"
-          ></el-button>
-        </el-input>
-      </el-col>
-    </div>
-    <div class="table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        max-height="350"
-        stripe
-        :border="false"
-        :fit="false"
-      >
-        <el-table-column
-          prop="date"
-          label="id"
-          fixed="left"
-          width="210"
-          align="center"
-        >
-          <template slot-scope="scope">
             <el-button
-              size="mini"
-              type="text"
-              @click="handleDetail(scope.row.id)"
-              >{{ scope.row.id }}</el-button
-            >
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题"
-          width="500"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="editor"
-          label="作者"
-          width="180"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="creationTime"
-          label="创建时间"
-          width="290"
-          align="center"
-        ></el-table-column>
-        <el-table-column label="推荐" width="150" align="center">
-          <template slot-scope="scope">
-            <el-switch
-              :disabled="value != 1"
-              v-model="scope.row.recommend"
-              @change="handleRecommendChange(scope.row.id, scope.row.recommend)"
-            ></el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200" align="center">
-          <template slot-scope="scope">
-            <el-button
-              :disabled="expertConsultation_technologyArticle_update"
-              v-if="value == 0"
-              size="mini"
-              type="primary"
-              @click="handleUpdate(scope.$index, scope.row)"
-              >审核<i class="el-icon-edit"></i
+              :disabled="expertConsultation_technologyArticle_select"
+              slot="append"
+              @click="handleSearch"
+              icon="el-icon-search"
             ></el-button>
-            <el-button
-              :disabled="expertConsultation_technologyArticle_delete"
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除<i class="el-icon-delete"></i
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pn"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="ps"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
-    </div>
+          </el-input>
+        </el-col>
+      </div>
+      <div class="table">
+        <el-table
+          :data="tableData"
+          style="width: 100%"
+          max-height="350"
+          stripe
+          :border="false"
+          :fit="false"
+        >
+          <el-table-column
+            prop="date"
+            label="id"
+            fixed="left"
+            width="210"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleDetail(scope.row.id)"
+                >{{ scope.row.id }}</el-button
+              >
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="title"
+            label="标题"
+            width="500"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="editor"
+            label="作者"
+            width="180"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="creationTime"
+            label="创建时间"
+            width="290"
+            align="center"
+          ></el-table-column>
+          <el-table-column label="推荐" width="150" align="center">
+            <template slot-scope="scope">
+              <el-switch
+                :disabled="value != 1"
+                v-model="scope.row.recommend"
+                @change="handleRecommendChange(scope.row.id, scope.row.recommend)"
+              ></el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right" width="200" align="center">
+            <template slot-scope="scope">
+              <el-button
+                :disabled="expertConsultation_technologyArticle_update"
+                v-if="value == 0"
+                size="mini"
+                type="primary"
+                @click="handleUpdate(scope.$index, scope.row)"
+                >审核<i class="el-icon-edit"></i
+              ></el-button>
+              <el-button
+                :disabled="expertConsultation_technologyArticle_delete"
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                >删除<i class="el-icon-delete"></i
+              ></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pn"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="ps"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
+</el-card>
   </div>
 </template>
 

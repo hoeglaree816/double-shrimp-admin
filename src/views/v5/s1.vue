@@ -3,129 +3,131 @@
     <div class="title">
       <h2>审核帖子</h2>
     </div>
-    <div class="toolbar">
-      <!-- <el-col :span="4">
+    <el-card class="box-card" shadow="always">
+      <div class="toolbar">
+        <!-- <el-col :span="4">
         <el-button type="primary" size="medium" @click="handleAdd" icon="el-icon-plus">添加</el-button>
       </el-col>-->
-      <el-col :span="6">
-        <template>
-          <el-select
-            v-model="value"
-            filterable
-            placeholder="按审核状态搜索"
-            @change="handleSelectSearch"
-            :disabled="isSearching"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </template>
-      </el-col>
-      <el-col :span="8">
-        <el-input
-          :disabled="expertConsultation_post_select"
-          placeholder="按关键字搜索"
-          v-model="input"
-          class="input-with-select"
-          clearable
-          @clear="handleClear"
-        >
-          <el-button
+        <el-col :span="6">
+          <template>
+            <el-select
+              v-model="value"
+              filterable
+              placeholder="按审核状态搜索"
+              @change="handleSelectSearch"
+              :disabled="isSearching"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </template>
+        </el-col>
+        <el-col :span="8">
+          <el-input
             :disabled="expertConsultation_post_select"
-            slot="append"
-            @click="handleSearch"
-            icon="el-icon-search"
-          ></el-button>
-        </el-input>
-      </el-col>
-    </div>
-    <div class="table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        max-height="350"
-        stripe
-        :border="false"
-        :fit="false"
-      >
-        <el-table-column
-          prop="date"
-          label="id"
-          fixed="left"
-          width="210"
-          align="center"
+            placeholder="按关键字搜索"
+            v-model="input"
+            class="input-with-select"
+            clearable
+            @clear="handleClear"
+          >
+            <el-button
+              :disabled="expertConsultation_post_select"
+              slot="append"
+              @click="handleSearch"
+              icon="el-icon-search"
+            ></el-button>
+          </el-input>
+        </el-col>
+      </div>
+      <div class="table">
+        <el-table
+          :data="tableData"
+          style="width: 100%"
+          max-height="350"
+          stripe
+          :border="false"
+          :fit="false"
         >
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDetail(scope.row.id)"
-              >{{ scope.row.id }}</el-button
-            >
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题"
-          width="400"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="userName"
-          label="发布者"
-          width="230"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="creationTime"
-          label="发布时间"
-          width="290"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          label="操作"
-          fixed="right"
-          width="200"
-          align="center"
-          v-show="this.value != 3"
-        >
-          <template slot-scope="scope">
-            <el-button
-              :disabled="expertConsultation_post_update"
-              v-if="value == 0"
-              size="mini"
-              type="primary"
-              @click="handleVerify(scope.$index, scope.row)"
-            >
-              审核
-              <i class="el-icon-edit"></i>
-            </el-button>
-            <el-button
-              :disabled="expertConsultation_post_delete"
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-            >
-              删除
-              <i class="el-icon-delete"></i>
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pn"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="ps"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
-    </div>
+          <el-table-column
+            prop="date"
+            label="id"
+            fixed="left"
+            width="210"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleDetail(scope.row.id)"
+                >{{ scope.row.id }}</el-button
+              >
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="title"
+            label="标题"
+            width="400"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="userName"
+            label="发布者"
+            width="230"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="creationTime"
+            label="发布时间"
+            width="290"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="200"
+            align="center"
+            v-show="this.value != 3"
+          >
+            <template slot-scope="scope">
+              <el-button
+                :disabled="expertConsultation_post_update"
+                v-if="value == 0"
+                size="mini"
+                type="primary"
+                @click="handleVerify(scope.$index, scope.row)"
+              >
+                审核
+                <i class="el-icon-edit"></i>
+              </el-button>
+              <el-button
+                :disabled="expertConsultation_post_delete"
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+              >
+                删除
+                <i class="el-icon-delete"></i>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pn"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="ps"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -140,7 +142,7 @@ export default {
       ps: 5,
       total: 100,
       tableData: [],
-      isSearching:false,
+      isSearching: false,
       options: [
         {
           value: "0",
@@ -169,20 +171,19 @@ export default {
   methods: {
     handleCurrentChange(pn) {
       this.pn = pn;
-      if(this.isSearching){
-        model.getByKeyWord(this.input,this.pn,this.ps).then((res) => {
-        if (res) {
-          this.tableData = res.rows;
-          this.total = res.total;
-        }
-        else{
-          this.$message({
-            type: "info",
-            message: "暂无搜索结果",
-          });
-        }
-      });
-      }else{
+      if (this.isSearching) {
+        model.getByKeyWord(this.input, this.pn, this.ps).then((res) => {
+          if (res) {
+            this.tableData = res.rows;
+            this.total = res.total;
+          } else {
+            this.$message({
+              type: "info",
+              message: "暂无搜索结果",
+            });
+          }
+        });
+      } else {
         model.list(this.pn, this.ps, this.value).then((res) => {
           this.total = res.data.total;
           this.tableData = res.data.rows;
@@ -191,20 +192,19 @@ export default {
     },
     handleSizeChange(ps) {
       this.ps = ps;
-      if(this.isSearching){
-        model.getByKeyWord(this.input,this.pn,this.ps).then((res) => {
-        if (res) {
-          this.tableData = res.rows;
-          this.total = res.total;
-        }
-        else{
-          this.$message({
-            type: "info",
-            message: "暂无搜索结果",
-          });
-        }
-      });
-      }else{
+      if (this.isSearching) {
+        model.getByKeyWord(this.input, this.pn, this.ps).then((res) => {
+          if (res) {
+            this.tableData = res.rows;
+            this.total = res.total;
+          } else {
+            this.$message({
+              type: "info",
+              message: "暂无搜索结果",
+            });
+          }
+        });
+      } else {
         model.list(this.pn, this.ps, this.value).then((res) => {
           this.total = res.data.total;
           this.tableData = res.data.rows;
@@ -252,12 +252,11 @@ export default {
     },
     handleSearch() {
       this.isSearching = true;
-      model.getByKeyWord(this.input,1,this.ps).then((res) => {
-        if (res){
+      model.getByKeyWord(this.input, 1, this.ps).then((res) => {
+        if (res) {
           this.tableData = res.rows;
           this.total = res.total;
-        } 
-        else{
+        } else {
           this.$message({
             type: "info",
             message: "暂无搜索结果",
@@ -268,9 +267,9 @@ export default {
     handleClear() {
       this.isSearching = false;
       model.list(1, this.ps, 0).then((res) => {
-          this.total = res.data.total;
-          this.tableData = res.data.rows;
-        });
+        this.total = res.data.total;
+        this.tableData = res.data.rows;
+      });
     },
     handleVerify(index, row) {
       this.$router.push({

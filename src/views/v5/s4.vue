@@ -3,6 +3,7 @@
     <div class="title">
       <h2>类型管理</h2>
     </div>
+    <el-card class="box-card" shadow="always">
     <div class="toolbar">
       <!-- 添加区域 -->
       <el-col :span="4">
@@ -34,7 +35,6 @@
         </el-select>
       </el-col>
     </div>
-
     <div class="table">
       <el-table
         :data="tableData"
@@ -96,6 +96,7 @@
         :total="total"
       ></el-pagination>
     </div>
+</el-card>
   </div>
 </template>
 

@@ -3,99 +3,106 @@
     <div class="title">
       <h2>类型管理</h2>
     </div>
-    <div class="toolbar">
-      <!-- 添加区域 -->
-      <el-col :span="4">
-        <el-button
-          :disabled="type_add"
-          type="primary"
-          size="medium"
-          @click="handleAdd"
-          icon="el-icon-plus"
-          >添加</el-button
-        >
-      </el-col>
-
-      <!-- 选择区域 -->
-      <el-col :span="8">
-        <el-select
-          placeholder="请选择类型"
-          v-model="input"
-          class="input-with-select"
-          @change="handleTypeChange"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.label"
-            :label="item.label"
-            :value="item.value"
+    <el-card class="box-card" shadow="always">
+      <div class="toolbar">
+        <!-- 添加区域 -->
+        <el-col :span="4">
+          <el-button
+            :disabled="type_add"
+            type="primary"
+            size="medium"
+            @click="handleAdd"
+            icon="el-icon-plus"
+            >添加</el-button
           >
-          </el-option>
-        </el-select>
-      </el-col>
-    </div>
+        </el-col>
 
-    <div class="table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        max-height="350"
-        stripe
-        :border="false"
-        :fit="false"
-      >
-        <el-table-column
-          prop="id"
-          label="id"
-          fixed="left"
-          width="210"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDetail(scope.row.id)"
-              >{{ scope.row.id }}</el-button
+        <!-- 选择区域 -->
+        <el-col :span="8">
+          <el-select
+            placeholder="请选择类型"
+            v-model="input"
+            class="input-with-select"
+            @change="handleTypeChange"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.label"
+              :label="item.label"
+              :value="item.value"
             >
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="专家分类"
-          width="680"
-          align="center"
-        ></el-table-column>
-        <el-table-column prop="parentId" label="父级类型" width="525">
-          <template slot-scope="scope">
-            {{ scope.row.parentId }}
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200" align="center">
-          <template slot-scope="scope">
-            <el-button
-              :disabled="type_update"
-              size="mini"
-              type="primary"
-              @click="handleUpdate(scope.$index, scope.row)"
-              >编辑<i class="el-icon-edit"></i
-            ></el-button>
-            <!-- <el-button :disabled="education_courseCategory_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
-          </template>
-        </el-table-column>
-      </el-table>
+            </el-option>
+          </el-select>
+        </el-col>
+      </div>
 
-      <!-- 分页区域 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pn"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="ps"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
-    </div>
+      <div class="table">
+        <el-table
+          :data="tableData"
+          style="width: 100%"
+          max-height="350"
+          stripe
+          :border="false"
+          :fit="false"
+        >
+          <el-table-column
+            prop="id"
+            label="id"
+            fixed="left"
+            width="210"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleDetail(scope.row.id)"
+                >{{ scope.row.id }}</el-button
+              >
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="专家分类"
+            width="680"
+            align="center"
+          ></el-table-column>
+          <el-table-column prop="parentId" label="父级类型" width="525">
+            <template slot-scope="scope">
+              {{ scope.row.parentId }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            width="200"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button
+                :disabled="type_update"
+                size="mini"
+                type="primary"
+                @click="handleUpdate(scope.$index, scope.row)"
+                >编辑<i class="el-icon-edit"></i
+              ></el-button>
+              <!-- <el-button :disabled="education_courseCategory_delete" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除<i class="el-icon-delete"></i></el-button> -->
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 分页区域 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pn"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="ps"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -215,7 +222,7 @@ export default {
           "fishingTechnologySchool_intellectualPropertyCategory"
         );
       }
-      
+
       this.getInfo();
     },
     /* 获取表单数据 */

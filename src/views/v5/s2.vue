@@ -3,6 +3,7 @@
     <div class="title">
       <h2>审核专家</h2>
     </div>
+    <el-card class="box-card" shadow="always">
     <div class="toolbar">
       <!-- <el-col :span="4">
         <el-button type="primary" size="medium" @click="handleAdd" icon="el-icon-plus">添加</el-button>
@@ -129,6 +130,7 @@
         :total="total"
       ></el-pagination>
     </div>
+</el-card>
   </div>
 </template>
 
