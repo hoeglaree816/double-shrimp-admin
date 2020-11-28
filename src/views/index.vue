@@ -104,6 +104,9 @@ export default {
       axios({
         method: "post",
         url: "/captcha/getCaptcha",
+        headers:{
+          xip:sessionStorage.getItem('xip')
+        }
       })
         .then((res) => {
           if (res.status == 200) {
@@ -150,9 +153,12 @@ export default {
           loginId: this._data.form.loginId,
           password: this._data.form.password,
         },
+        headers:{
+          xip:sessionStorage.getItem('xip')
+        }
       })
         .then((res) => {
-          console.log('res.data: ', res.data);
+          // console.log('res.data: ', res.data);
           loading.close();//关闭加载中效果
           if (!res.data.flag) {
             //登陆失败
@@ -246,7 +252,7 @@ export default {
     // }
   },
   mounted() {
-    sessionStorage.clear(); //清空sessionStorage里面的数据
+    // sessionStorage.clear(); //清空sessionStorage里面的数据
     this.refreshCaptcha(); //打开即可获得一次验证码
     // this.setCookie();
   },
