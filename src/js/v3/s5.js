@@ -1,7 +1,9 @@
 let axios = require('axios');
 const axios_ = axios.create({
   baseURL: "http://106.75.154.40:9012/education",
-  headers: { 'Content-Type': 'application/json' }
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 module.exports = class {
   static labels = {
@@ -11,7 +13,7 @@ module.exports = class {
     typeName: '',
   };
 
-  static typeInfo = ['manuscriptsTypes', 'technicalArticlesTypes', 'educationTypes', 'intellectualPropertyRightsTypes']
+  static typeInfo = ['educationTypes', 'technicalArticlesTypes', 'manuscriptsTypes', 'intellectualPropertyRightsTypes']
 
   constructor(id, name) {
     this.id = id || "";
@@ -32,6 +34,7 @@ module.exports = class {
 
   /* 获取表单数据 */
   static list(pn, ps, type) {
+    // console.log('this.typeInfo[type]: ', this.typeInfo[type]);
     return new Promise((resolve) => {
       axios_.post(`/${this.typeInfo[type]}/${pn}/${ps}`).then((res) => {
         resolve(res);
@@ -57,6 +60,7 @@ module.exports = class {
   static add(obj, type) {
     return new Promise((resolve) => {
       console.log(obj);
+
       axios_
         .post(`/${this.typeInfo[type]}/add`, obj)
         .then((res) => {

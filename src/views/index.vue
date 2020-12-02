@@ -126,7 +126,7 @@ export default {
               type: "error",
               showClose: false,
               duration: 1000,
-            });
+            }); 
           }
         })
         .catch((err) => {
@@ -160,7 +160,7 @@ export default {
         .then((res) => {
           // console.log('res.data: ', res.data);
           loading.close();//关闭加载中效果
-          if (!res.data.flag) {
+          if (res.data.code == 20001) {
             //登陆失败
             this.$message({
               message: res.data.message,

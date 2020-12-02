@@ -187,14 +187,13 @@ export default {
       this.video = [];
     },
     handleVideoSuccess(response, file, fileList) {
-      // console.log("file: ", file);
+      console.log('response: ', response);
       this.video = [
         {
           url: fileList[0].response.data,
           name: file.name,
         },
       ];
-      // console.log(response);
       this.successTip("上传成功");
     },
     handleVideoExceed(files, fileList) {

@@ -44,7 +44,7 @@
           </el-menu-item>
         </router-link>
         <router-link to="/v3/s5" >
-          <el-menu-item index="5">
+          <el-menu-item index="6">
             <i class="el-icon-menu"></i>
             <span slot="title">类型管理</span>
           </el-menu-item>
